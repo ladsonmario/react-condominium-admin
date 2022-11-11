@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import {
@@ -48,10 +47,7 @@ function stringAvatar(name: string) {
 
 function Avatars() {
   return (
-    <>
-      <Helmet>
-        <title>Avatars - Components</title>
-      </Helmet>
+    <>      
       <PageTitleWrapper>
         <PageTitle
           heading="Avatars"

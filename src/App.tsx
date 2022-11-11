@@ -7,7 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 
-function App() {
+const App = () => {
   const content = useRoutes(router);
 
   return (

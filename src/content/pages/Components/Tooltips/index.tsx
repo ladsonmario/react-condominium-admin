@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import {
@@ -16,10 +15,7 @@ import Footer from 'src/components/Footer';
 
 function Tooltips() {
   return (
-    <>
-      <Helmet>
-        <title>Tooltips - Components</title>
-      </Helmet>
+    <>      
       <PageTitleWrapper>
         <PageTitle
           heading="Tooltips"

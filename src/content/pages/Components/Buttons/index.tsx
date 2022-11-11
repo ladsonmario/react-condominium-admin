@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import {
@@ -17,10 +16,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 function Buttons() {
   return (
-    <>
-      <Helmet>
-        <title>Buttons - Components</title>
-      </Helmet>
+    <>      
       <PageTitleWrapper>
         <PageTitle
           heading="Buttons"

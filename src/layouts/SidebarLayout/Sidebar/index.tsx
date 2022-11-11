@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import Scrollbar from 'src/components/Scrollbar';
 import { SidebarContext } from 'src/contexts/SidebarContext';
+import { LogoImg } from 'src/components/LogoImg';
 
 import {
   Box,
@@ -9,14 +10,11 @@ import {
   styled,
   Divider,
   useTheme,
-  Button,
   lighten,
-  darken,
-  Tooltip
+  darken
 } from '@mui/material';
 
 import SidebarMenu from './SidebarMenu';
-import Logo from 'src/components/LogoSign';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -25,10 +23,10 @@ const SidebarWrapper = styled(Box)(
         color: ${theme.colors.alpha.trueWhite[70]};
         position: relative;
         z-index: 7;
-        height: 100%;
-        padding-bottom: 68px;
+        height: 100%;        
 `
 );
+
 
 function Sidebar() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
@@ -55,16 +53,9 @@ function Sidebar() {
         }}
       >
         <Scrollbar>
-          <Box mt={3}>
-            <Box
-              mx={2}
-              sx={{
-                width: 52
-              }}
-            >
-              <Logo />
+            <Box mt={3} display="flex" justifyContent="center">
+              <LogoImg size="70" measure="%" />
             </Box>
-          </Box>
           <Divider
             sx={{
               mt: theme.spacing(3),
@@ -73,25 +64,7 @@ function Sidebar() {
             }}
           />
           <SidebarMenu />
-        </Scrollbar>
-        <Divider
-          sx={{
-            background: theme.colors.alpha.trueWhite[10]
-          }}
-        />
-        <Box p={2}>
-          <Button
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="warning"
-            size="small"
-            fullWidth
-          >
-            Upgrade to PRO
-          </Button>
-        </Box>
+        </Scrollbar>        
       </SidebarWrapper>
       <Drawer
         sx={{
@@ -112,15 +85,8 @@ function Sidebar() {
           }}
         >
           <Scrollbar>
-            <Box mt={3}>
-              <Box
-                mx={2}
-                sx={{
-                  width: 52
-                }}
-              >
-                <Logo />
-              </Box>
+            <Box mt={3} display="flex" justifyContent="center">
+              <LogoImg size="70" measure="%" />
             </Box>
             <Divider
               sx={{

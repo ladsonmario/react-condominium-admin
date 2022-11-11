@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import {
@@ -40,10 +39,7 @@ function Badges() {
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Badges - Components</title>
-      </Helmet>
+    <>      
       <PageTitleWrapper>
         <PageTitle
           heading="Badges"
