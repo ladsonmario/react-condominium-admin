@@ -16,7 +16,7 @@ const Loader = (Component) => (props) =>
 
 // Pages
 
-
+const Login = Loader(lazy(() => import('src/content/pages/Auth/Login')));
 
 // Dashboards
 
@@ -94,6 +94,10 @@ const routes: RouteObject[] = [
         element: <Status404 />
       }
     ]
+  },
+  {
+    path: '/login',
+    element: <Login />
   },
   {
     path: 'dashboards',

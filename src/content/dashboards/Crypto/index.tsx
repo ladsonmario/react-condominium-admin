@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Container, Grid } from '@mui/material';
@@ -8,7 +10,21 @@ import Wallets from './Wallets';
 import AccountSecurity from './AccountSecurity';
 import WatchList from './WatchList';
 
+import { useAPI } from '../../../services/api';
+
 function DashboardCrypto() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    ( async () => {
+      if(useAPI.getToken()) {
+
+      } else {
+        navigate('/login');
+      }
+    })();
+  }, []);
+
   return (
     <>      
       <PageTitleWrapper>
