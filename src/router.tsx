@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useRoutes } from 'react-router-dom';
 import { RouteObject } from 'react-router';
 
 import SidebarLayout from 'src/layouts/SidebarLayout';
@@ -94,11 +94,7 @@ const routes: RouteObject[] = [
         element: <Status404 />
       }
     ]
-  },
-  {
-    path: '/login',
-    element: <Login />
-  },
+  },  
   {
     path: 'dashboards',
     element: <SidebarLayout />,
@@ -191,5 +187,14 @@ const routes: RouteObject[] = [
     ]
   }
 ];
+
+export const RouterLogin = () => {
+  return useRoutes([
+    {
+      path: '/login',
+      element: <Login />
+    }
+  ]);
+}
 
 export default routes;

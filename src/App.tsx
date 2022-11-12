@@ -1,5 +1,7 @@
-import { useRoutes } from 'react-router-dom';
-import router from 'src/router';
+import { useEffect, useState } from 'react';
+import { useNavigate, useRoutes } from 'react-router-dom';
+import router, { RouterLogin } from 'src/router';
+import { useAPI } from './services/api';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -8,15 +10,43 @@ import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 
 const App = () => {
-  const content = useRoutes(router);
+  type ResultType = {
+    error: string;
+  }
 
-  return (
+  const content = useRoutes(router);
+  const navigate = useNavigate();  
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    ( async () => {
+      if(useAPI.getToken()) {
+        const result: ResultType = await useAPI.validateToken();        
+        
+        if(!result.error) {
+          setLoading(false);
+        } else {
+          alert(result.error);
+          navigate('/login');
+        }
+
+      } else {
+        navigate('/login');
+      }
+    })();
+  }, []);  
+
+  return (      
     <ThemeProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <CssBaseline />
-        {content}
-      </LocalizationProvider>
-    </ThemeProvider>
+      <CssBaseline />
+      {!loading &&
+        <LocalizationProvider dateAdapter={AdapterDateFns}>              
+          {content}
+        </LocalizationProvider>
+      }
+      <RouterLogin />
+    </ThemeProvider> 
   );
 }
 export default App;
