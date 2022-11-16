@@ -1,9 +1,8 @@
 import { Suspense, lazy } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 import { RouteObject } from 'react-router';
 
 import SidebarLayout from 'src/layouts/SidebarLayout';
-import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -14,186 +13,38 @@ const Loader = (Component) => (props) =>
     </Suspense>
   );
 
-// Pages
-
+// Auth Pages
 const Login = Loader(lazy(() => import('src/pages/Login')));
+const Logout = Loader(lazy(() => import('src/pages/Logout')));
 
-// Dashboards
+// Dashboard
+const Dashboard = Loader(lazy(() => import('src/pages/Dashboard')));
 
-const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
+//Pages
+const Wall = Loader(lazy(() => import('src/pages/Wall')));
 
-// Applications
-
-const Messenger = Loader(
-  lazy(() => import('src/content/applications/Messenger'))
-);
-const Transactions = Loader(
-  lazy(() => import('src/content/applications/Transactions'))
-);
-const UserProfile = Loader(
-  lazy(() => import('src/content/applications/Users/profile'))
-);
-const UserSettings = Loader(
-  lazy(() => import('src/content/applications/Users/settings'))
-);
-
-// Components
-
-const Buttons = Loader(
-  lazy(() => import('src/content/pages/Components/Buttons'))
-);
-const Modals = Loader(
-  lazy(() => import('src/content/pages/Components/Modals'))
-);
-const Accordions = Loader(
-  lazy(() => import('src/content/pages/Components/Accordions'))
-);
-const Tabs = Loader(lazy(() => import('src/content/pages/Components/Tabs')));
-const Badges = Loader(
-  lazy(() => import('src/content/pages/Components/Badges'))
-);
-const Tooltips = Loader(
-  lazy(() => import('src/content/pages/Components/Tooltips'))
-);
-const Avatars = Loader(
-  lazy(() => import('src/content/pages/Components/Avatars'))
-);
-const Cards = Loader(lazy(() => import('src/content/pages/Components/Cards')));
-const Forms = Loader(lazy(() => import('src/content/pages/Components/Forms')));
-
-// Status
-
-const Status404 = Loader(
-  lazy(() => import('src/content/pages/Status/Status404'))
-);
+// Not Found Page
+const Status404 = Loader(lazy(() => import('src/pages/Status404')));
 
 const routes: RouteObject[] = [
   {
     path: '',
     element: <SidebarLayout />,
-    children: [
-      {        
-        path: '/',
-        element: <Crypto />        
-      },      
-      {
-        path: 'status',
-        children: [
-          {
-            path: '',
-            element: <Navigate to="404" replace />
-          },
-          {
-            path: '404',
-            element: <Status404 />
-          }          
-        ]
-      },
-      {
-        path: '*',
-        element: <Status404 />
-      }
-    ]
+    children: [{ path: '/', element: <Dashboard /> }]
   },  
-  {
-    path: 'dashboards',
+  { path: 'management', 
     element: <SidebarLayout />,
     children: [
-      {
-        path: '',
-        element: <Navigate to="crypto" replace />
-      },
-      {
-        path: 'messenger',
-        element: <Messenger />
-      }
+      { path: 'wall', element: <Wall /> }
     ]
   },
-  {
-    path: 'management',
-    element: <SidebarLayout />,
-    children: [
-      {
-        path: '',
-        element: <Navigate to="transactions" replace />
-      },
-      {
-        path: 'transactions',
-        element: <Transactions />
-      },
-      {
-        path: 'profile',
-        children: [
-          {
-            path: '',
-            element: <Navigate to="details" replace />
-          },
-          {
-            path: 'details',
-            element: <UserProfile />
-          },
-          {
-            path: 'settings',
-            element: <UserSettings />
-          }
-        ]
-      }
-    ]
-  },
-  {
-    path: '/components',
-    element: <SidebarLayout />,
-    children: [
-      {
-        path: '',
-        element: <Navigate to="buttons" replace />
-      },
-      {
-        path: 'buttons',
-        element: <Buttons />
-      },
-      {
-        path: 'modals',
-        element: <Modals />
-      },
-      {
-        path: 'accordions',
-        element: <Accordions />
-      },
-      {
-        path: 'tabs',
-        element: <Tabs />
-      },
-      {
-        path: 'badges',
-        element: <Badges />
-      },
-      {
-        path: 'tooltips',
-        element: <Tooltips />
-      },
-      {
-        path: 'avatars',
-        element: <Avatars />
-      },
-      {
-        path: 'cards',
-        element: <Cards />
-      },
-      {
-        path: 'forms',
-        element: <Forms />
-      }
-    ]
-  }
+  { path: '*', element: <Status404 /> }  
 ];
 
-export const RouterLogin = () => {
+export const AuthRouter = () => {
   return useRoutes([
-    {
-      path: '/login',
-      element: <Login />
-    }
+    { path: '/login',  element: <Login /> },
+    { path: '/logout', element: <Logout /> }
   ]);
 }
 

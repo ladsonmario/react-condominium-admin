@@ -3,7 +3,7 @@ const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 const request = async (method: string, endpoint: string, params: Object, token?: string) => {
     method = method.toUpperCase();
     let fullUrl = `${BASE}${endpoint}`;
-    let body: string = '';
+    let body: string = null;
 
     switch(method) {
         case 'GET':
@@ -34,14 +34,24 @@ export const useAPI = {
         return window.localStorage.getItem('token');
     },
     validateToken: async () => {
-        let token = window.localStorage.getItem('token');
-        if(token) {
-            const json: Promise<any> = await request('post', '/auth/validate', {}, token);
-            return json;
-        }
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('post', '/auth/validate', {}, token);
+        return json;
+        
     },
     login: async (email: string, password: string) => {    
         const json: Promise<any> = await request('post', '/auth/login', { email, password });
+        return json;
+    },
+    logout: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('post', '/auth/logout', {}, token);
+        window.localStorage.removeItem('token');
+        return json;        
+    },
+    getWall: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/walls', {}, token);
         return json;
     }
 }

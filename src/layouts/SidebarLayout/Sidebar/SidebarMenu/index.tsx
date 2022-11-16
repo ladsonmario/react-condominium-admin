@@ -187,7 +187,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/dashboard"
+                  to="/"
                   startIcon={<BrightnessLowTwoToneIcon />}
                 >
                   Painel Geral
@@ -211,7 +211,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/wall"
+                  to="/management/wall"
                   startIcon={<ReportIcon />}
                 >
                   Avisos
@@ -222,7 +222,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/documents"
+                  to="/management/documents"
                   startIcon={<InsertDriveFileIcon />}
                 >
                   Documentos
@@ -233,7 +233,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/reservations"
+                  to="/management/reservations"
                   startIcon={<CalendarMonthIcon />}
                 >
                   Reservas
@@ -244,7 +244,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/warnings"
+                  to="/management/warnings"
                   startIcon={<NotificationImportantIcon />}
                 >
                   Ocorrências

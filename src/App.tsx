@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useRoutes } from 'react-router-dom';
-import router, { RouterLogin } from 'src/router';
+import router, { AuthRouter } from 'src/router';
 import { useAPI } from './services/api';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -45,7 +45,7 @@ const App = () => {
           {content}
         </LocalizationProvider>
       }
-      <RouterLogin />
+      <AuthRouter />
     </ThemeProvider> 
   );
 }
