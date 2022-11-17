@@ -24,7 +24,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TitleIcon from '@mui/icons-material/Title';
-import ArticleIcon from '@mui/icons-material/Article';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -49,7 +50,7 @@ const Input = styled(TextField)(
     () => `width: 100%;`
 );
 
-const Wall = () => {
+const Documents = () => {
     type ResultWallType = {
         error: string;
         list: ListType[];
@@ -58,18 +59,22 @@ const Wall = () => {
     type ListType = {
         id: number;
         title: string;
-        body: string;
-        datecreated: string;
+        fileurl: string;
     }    
     type ResultActionsWallType = {
         error: string;
+    }
+
+    type DataType = {
+        title: string;
+        file?: File;
     }
 
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState<ListType[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
-    const [modalBody, setModalBody] = useState('');
+    const [modalFile, setModalFile] = useState<File>();
     const [modalId, setModalId] = useState('');
 
     useEffect(() => {
@@ -79,14 +84,17 @@ const Wall = () => {
     const handleInputModalTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setModalTitle(e.target.value);
     }
-    const handleInputModalBody = (e: ChangeEvent<HTMLInputElement>) => {
-        setModalBody(e.target.value);
+    const handleInputModalFile = (e: ChangeEvent<HTMLInputElement>) => {
+        setModalFile(e.currentTarget.files[0]);
+        console.log(e.currentTarget.files[0]);
     }
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultWallType = await useAPI.getWall();
+        const result: ResultWallType = await useAPI.getDocuments();
         setLoading(false);
+        
+        console.log(result);
 
         if(result.error !== '') {
             alert(result.error);
@@ -102,9 +110,14 @@ const Wall = () => {
     const handleNewButton = () => {
         setModalId('');
         setModalTitle('');
-        setModalBody('');
+        setModalFile(null);
 
         setShowModal(true);
+    }
+
+    const handleDownloadButton = (id: string) => {
+        const index = list.findIndex(item => item.id === parseInt(id));
+        window.open(list[index].fileurl);
     }
 
     const handleEditButton = (id: string) => {        
@@ -112,7 +125,7 @@ const Wall = () => {
         
         setModalId(list[index].id.toString());
         setModalTitle(list[index].title);
-        setModalBody(list[index].body);
+        //setModalBody(list[index].body);
 
         setShowModal(true);
     }
@@ -130,18 +143,24 @@ const Wall = () => {
     }
 
     const handleModalSave = async () => {
-        if(modalTitle && modalBody) {
+        if(modalTitle) {
             setLoading(true);
             let result: ResultActionsWallType = null;
-            const data = {
-                title: modalTitle, 
-                body: modalBody
+            const data: DataType = {
+                title: modalTitle                           
             }
             
             if(!modalId) {
-                result = await useAPI.addWall(data);
+                if(modalFile) {
+                    data.file = modalFile;
+                    result = await useAPI.addDocument(data);
+                } else {
+                    alert('Selecione um arquivo!');
+                    setLoading(false);
+                    return;
+                }
             } else {
-                result = await useAPI.updateWall(modalId, data);
+                result = await useAPI.updateDocument(modalId, data);
             }
             
             setLoading(false);
@@ -158,8 +177,7 @@ const Wall = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Título', flex: 2, minWidth: 300 },
-        { field: 'datecreated', headerName: 'Data de criação', flex: 1, minWidth: 150 },
+        { field: 'title', headerName: 'Título', flex: 2, minWidth: 300 },        
         { 
             field: 'id', 
             headerName: 'Ações',              
@@ -167,6 +185,13 @@ const Wall = () => {
             minWidth: 200,
             renderCell: (params: GridRenderCellParams) => (
                 <ButtonGroup>
+                    <Button 
+                        variant="contained" 
+                        color="success"
+                        onClick={() => handleDownloadButton(params.value)}                        
+                    >
+                        <CloudDownloadIcon />
+                    </Button>
                     <Button 
                         variant="contained" 
                         color="info"
@@ -189,7 +214,7 @@ const Wall = () => {
     return (
         <>
             <PageTitleWrapper>
-                <Typography variant="h2">Mural de Avisos</Typography>
+                <Typography variant="h2">Documentos</Typography>
             </PageTitleWrapper>
             <Container>
                 <Box>                                
@@ -200,7 +225,7 @@ const Wall = () => {
                                 startIcon={<AddCircleOutlineIcon />}
                                 onClick={handleNewButton}
                             >
-                                Novo Aviso
+                                Novo Documento
                             </Button>
                             <Divider sx={{ margin: '15px 0' }} />
                             <Box>
@@ -223,7 +248,7 @@ const Wall = () => {
                 maxWidth="sm"
             >
                 <DialogTitle sx={{ m: 0, p: 2 }}>
-                    <Typography variant="h3">{modalId === '' ? 'Novo' : 'Editar'} Aviso</Typography>
+                    <Typography variant="h3">{modalId === '' ? 'Novo' : 'Editar'} Documento</Typography>
                     <IconButton
                         aria-label="close"
                         onClick={handleCloseModal}
@@ -240,12 +265,12 @@ const Wall = () => {
                 <DialogContent dividers>
                     <FormGroup sx={{ gap: '20px' }}>
                         <Box>
-                            <LabelInput htmlFor="modal--title">Título do aviso</LabelInput>
+                            <LabelInput htmlFor="modal--title">Título do documento</LabelInput>
                             <Input                            
                                 id="modal--title"
                                 label="Título"
                                 type="text"
-                                placeholder="Digite um título para seu aviso"
+                                placeholder="Digite um título para seu documento"
                                 InputProps={{
                                     startAdornment: (
                                     <InputAdornment position="start">
@@ -259,24 +284,20 @@ const Wall = () => {
                             />
                         </Box>                        
                         <Box>
-                            <LabelInput htmlFor="modal--body">Corpo do aviso</LabelInput>
+                            <LabelInput htmlFor="modal--file">Arquivo (PDF)</LabelInput>
                             <Input                            
                                 id="modal--body"
-                                label="Corpo"
-                                type="text"
-                                multiline
-                                rows={4}
-                                maxRows={Infinity}                                                        
-                                placeholder="Digite o conteúdo do aviso"
+                                label="Arquivo"
+                                type="file"                                                                                      
+                                placeholder="Escolha um arquivo"
                                 InputProps={{
                                     startAdornment: (
                                     <InputAdornment position="start">
-                                        <ArticleIcon />
+                                        <AttachFileIcon />
                                     </InputAdornment>
                                     ),
-                                }}
-                                value={modalBody}
-                                onChange={handleInputModalBody}
+                                }}                                
+                                onChange={handleInputModalFile}
                                 disabled={loading ? true : false}        
                             />
                         </Box>                        
@@ -312,4 +333,4 @@ const Wall = () => {
     );
 }
 
-export default Wall;
+export default Documents;

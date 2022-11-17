@@ -1,5 +1,3 @@
-import { gridColumnsTotalWidthSelector } from "@mui/x-data-grid";
-
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
 const request = async (method: string, endpoint: string, params: Object, token?: string) => {
@@ -18,7 +16,7 @@ const request = async (method: string, endpoint: string, params: Object, token?:
             body = JSON.stringify(params);
         break;
     }
-    console.log(body);
+    
     let req = await fetch(fullUrl, {
         method,
         headers: {
@@ -60,5 +58,26 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');           
         const json: Promise<any> = await request('put', `/wall/${id}`, data, token);
         return json;
+    },
+    addWall: async (data: Object) => {
+        const token = window.localStorage.getItem('token');           
+        const json: Promise<any> = await request('post', '/walls', data, token);
+        return json;
+    },
+    removeWall: async (id: string) => {
+        const token = window.localStorage.getItem('token');           
+        const json: Promise<any> = await request('delete', `/wall/${id}`, {}, token);
+        return json;
+    },
+    getDocuments: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/docs', {}, token);
+        return json;
+    },
+    addDocument: async (data: Object) => {
+        
+    },
+    updateDocument: async (id: string, data: Object) => {
+
     }
 }
