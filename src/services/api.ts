@@ -1,3 +1,5 @@
+import { DocumentDataType, WallDataType } from "src/types/types";
+
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
 const request = async (method: string, endpoint: string, params: Object, token?: string) => {
@@ -28,6 +30,16 @@ const request = async (method: string, endpoint: string, params: Object, token?:
 
     return req.json();
 }
+const requestFormData = async (method: string, endpoint: string, formData: FormData, token) => {
+    method.toUpperCase();
+    const req = await fetch(`${BASE}${endpoint}`, {
+        method,
+        headers: { 'Authorization' : `${token ? `Bearer ${token}` : ''}` },
+        body: formData
+    });
+
+    return req.json();
+}
 
 export const useAPI = {
     getToken: () => {
@@ -54,12 +66,12 @@ export const useAPI = {
         const json: Promise<any> = await request('get', '/walls', {}, token);
         return json;
     },
-    updateWall: async (id: string, data: Object) => {
+    updateWall: async (id: string, data: WallDataType) => {
         const token = window.localStorage.getItem('token');           
         const json: Promise<any> = await request('put', `/wall/${id}`, data, token);
         return json;
     },
-    addWall: async (data: Object) => {
+    addWall: async (data: WallDataType) => {
         const token = window.localStorage.getItem('token');           
         const json: Promise<any> = await request('post', '/walls', data, token);
         return json;
@@ -74,10 +86,34 @@ export const useAPI = {
         const json: Promise<any> = await request('get', '/docs', {}, token);
         return json;
     },
-    addDocument: async (data: Object) => {
-        
+    addDocument: async (data: DocumentDataType) => {
+        const token = window.localStorage.getItem('token'); 
+        const formData = new FormData();
+        formData.append('title', data.title);
+        if(data.file) {
+            formData.append('file', data.file);
+        }
+        const json: Promise<any> = await requestFormData('post', '/docs', formData, token);
+        return json;
     },
-    updateDocument: async (id: string, data: Object) => {
-
+    updateDocument: async (id: string, data: DocumentDataType) => {
+        const token = window.localStorage.getItem('token'); 
+        const formData = new FormData();
+        formData.append('title', data.title);
+        if(data.file) {
+            formData.append('file', data.file);
+        }
+        const json: Promise<any> = await requestFormData('post', `/doc/${id}`, formData, token);
+        return json;
+    },
+    removeDocument: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('delete', `/doc/${id}`, {}, token);
+        return json;
+    },
+    getReservations: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/reservations', {}, token);
+        return json;
     }
 }

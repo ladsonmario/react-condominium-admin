@@ -23,6 +23,7 @@ const Dashboard = Loader(lazy(() => import('src/pages/Dashboard')));
 //Pages
 const Wall = Loader(lazy(() => import('src/pages/Wall')));
 const Documents = Loader(lazy(() => import('src/pages/Documents')));
+const Reservations = Loader(lazy(() => import('src/pages/Reservations')));
 
 // Not Found Page
 const Status404 = Loader(lazy(() => import('src/pages/Status404')));
@@ -38,6 +39,7 @@ const routes: RouteObject[] = [
     children: [
       { path: 'wall', element: <Wall /> },
       { path: 'documents', element: <Documents /> },
+      { path: 'reservations', element: <Reservations /> },
     ]
   },
   { path: '*', element: <Status404 /> }  

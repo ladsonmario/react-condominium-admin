@@ -28,6 +28,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { WallListType, WallDataType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -52,21 +53,15 @@ const Input = styled(TextField)(
 const Wall = () => {
     type ResultWallType = {
         error: string;
-        list: ListType[];
+        list: WallListType[];
     }
-
-    type ListType = {
-        id: number;
-        title: string;
-        body: string;
-        datecreated: string;
-    }    
+   
     type ResultActionsWallType = {
         error: string;
     }
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<ListType[]>([]);
+    const [list, setList] = useState<WallListType[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalBody, setModalBody] = useState('');
@@ -133,7 +128,7 @@ const Wall = () => {
         if(modalTitle && modalBody) {
             setLoading(true);
             let result: ResultActionsWallType = null;
-            const data = {
+            const data: WallDataType = {
                 title: modalTitle, 
                 body: modalBody
             }

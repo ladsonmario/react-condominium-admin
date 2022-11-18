@@ -25,11 +25,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TitleIcon from '@mui/icons-material/Title';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { DocumentDataType } from 'src/types/types';
+import { ReservationsListType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -51,23 +50,18 @@ const Input = styled(TextField)(
     () => `width: 100%;`
 );
 
-const Documents = () => {
+const Reservations = () => {
     type ResultWallType = {
         error: string;
-        list: ListType[];
+        list: ReservationsListType[];
     }
-
-    type ListType = {
-        id: number;
-        title: string;
-        fileurl: string;
-    }    
+   
     type ResultActionsWallType = {
         error: string;
     }    
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<ListType[]>([]);
+    const [list, setList] = useState<ReservationsListType[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalFile, setModalFile] = useState<File>();
@@ -87,7 +81,7 @@ const Documents = () => {
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultWallType = await useAPI.getDocuments();
+        const result: ResultWallType = await useAPI.getReservations();
         setLoading(false);
         
         console.log(result);
@@ -113,14 +107,14 @@ const Documents = () => {
 
     const handleDownloadButton = (id: string) => {
         const index = list.findIndex(item => item.id === parseInt(id));
-        window.open(list[index].fileurl);
+        //window.open(list[index].fileurl);
     }
 
     const handleEditButton = (id: string) => {        
         const index = list.findIndex(item => item.id === parseInt(id));
         
         setModalId(list[index].id.toString());
-        setModalTitle(list[index].title);        
+        //setModalTitle(list[index].title);        
 
         setShowModal(true);
     }
@@ -138,58 +132,53 @@ const Documents = () => {
     }
 
     const handleModalSave = async () => {
-        if(modalTitle) {
-            setLoading(true);
-            let result: ResultActionsWallType = null;
-            const data: DocumentDataType = {
-                title: modalTitle                           
-            }
+        // if(modalTitle) {
+        //     setLoading(true);
+        //     let result: ResultActionsWallType = null;
+        //     const data: DataType = {
+        //         title: modalTitle                           
+        //     }
             
-            if(!modalId) {
-                if(modalFile) {
-                    data.file = modalFile;
-                    result = await useAPI.addDocument(data);
-                } else {
-                    alert('Selecione um arquivo!');
-                    setLoading(false);
-                    return;
-                }
-            } else {
-                if(modalFile) {
-                    data.file = modalFile;
-                }
-                result = await useAPI.updateDocument(modalId, data);
-            }
+        //     if(!modalId) {
+        //         if(modalFile) {
+        //             data.file = modalFile;
+        //             result = await useAPI.addDocument(data);
+        //         } else {
+        //             alert('Selecione um arquivo!');
+        //             setLoading(false);
+        //             return;
+        //         }
+        //     } else {
+        //         if(modalFile) {
+        //             data.file = modalFile;
+        //         }
+        //         result = await useAPI.updateDocument(modalId, data);
+        //     }
             
-            setLoading(false);
+        //     setLoading(false);
             
-            if(result.error === '') {
-                getList();
-                setShowModal(false);
-            } else {
-                alert(result.error);
-            }
-        } else {
-            alert('Preencha todos os campos!')
-        }
+        //     if(result.error === '') {
+        //         getList();
+        //         setShowModal(false);
+        //     } else {
+        //         alert(result.error);
+        //     }
+        // } else {
+        //     alert('Preencha todos os campos!')
+        // }
     }
 
     const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Título', flex: 2, minWidth: 300 },        
+        { field: 'name_unit', headerName: 'Unidade', flex: 1, minWidth: 300 },        
+        { field: 'name_area', headerName: 'Área', flex: 1, minWidth: 300 },        
+        { field: 'reservation_date_formatted', headerName: 'Data da reserva', flex: 1, minWidth: 300 },        
         { 
             field: 'id', 
             headerName: 'Ações',              
             flex: 1,
-            minWidth: 200,
+            minWidth: 250,
             renderCell: (params: GridRenderCellParams) => (
-                <ButtonGroup>
-                    <Button 
-                        variant="contained" 
-                        color="success"
-                        onClick={() => handleDownloadButton(params.value)}                        
-                    >
-                        <CloudDownloadIcon />
-                    </Button>
+                <ButtonGroup>                    
                     <Button 
                         variant="contained" 
                         color="info"
@@ -212,7 +201,7 @@ const Documents = () => {
     return (
         <>
             <PageTitleWrapper>
-                <Typography variant="h2">Documentos</Typography>
+                <Typography variant="h2">Reservas</Typography>
             </PageTitleWrapper>
             <Container>
                 <Box>                                
@@ -331,4 +320,4 @@ const Documents = () => {
     );
 }
 
-export default Documents;
+export default Reservations;
