@@ -18,17 +18,21 @@ import {
     IconButton,    
     FormGroup,
     TextField,
-    InputAdornment
+    InputAdornment,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    SelectChangeEvent    
 } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
 import LoadingButton from '@mui/lab/LoadingButton';
-import TitleIcon from '@mui/icons-material/Title';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import TodayIcon from '@mui/icons-material/Today';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { ReservationsListType } from 'src/types/types';
+import { ReservationsListType, AreaListType, UnitListType, ReservationDataType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -51,45 +55,74 @@ const Input = styled(TextField)(
 );
 
 const Reservations = () => {
-    type ResultWallType = {
+    type ResultReservationType = {
         error: string;
         list: ReservationsListType[];
     }
    
-    type ResultActionsWallType = {
+    type ResultActionsReservationType = {
         error: string;
-    }    
+    } 
+    
+    type ResultUnitType = {
+        error: string;
+        list: UnitListType[];
+    }
+
+    type ResultAreaType = {
+        error: string;
+        list: AreaListType[];
+    }
 
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState<ReservationsListType[]>([]);
-    const [showModal, setShowModal] = useState(false);
-    const [modalTitle, setModalTitle] = useState('');
-    const [modalFile, setModalFile] = useState<File>();
+    const [showModal, setShowModal] = useState(false);    
     const [modalId, setModalId] = useState('');
+    const [modalUnitList, setModalUnitList] = useState<UnitListType[]>([]);
+    const [modalAreaList, setModalAreaList] = useState<AreaListType[]>([]);    
+    const [modalUnitId, setModalUnitId] = useState(0);
+    const [modalAreaId, setModalAreaId] = useState(0);
+    const [modalDate, setModalDate] = useState('');
 
     useEffect(() => {
         getList();
+        getUnitList();
+        getAreaList();
     }, []);
 
-    const handleInputModalTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        setModalTitle(e.target.value);
+    const handleInputModalDate = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalDate(e.target.value);
     }
-    const handleInputModalFile = (e: ChangeEvent<HTMLInputElement>) => {
-        setModalFile(e.currentTarget.files[0]);
-        console.log(e.currentTarget.files[0]);
+    const handleInputUnit = (e: SelectChangeEvent) => {
+        setModalUnitId(parseInt(e.target.value));        
+    }
+    const handleInputArea = (e: SelectChangeEvent) => {
+        setModalAreaId(parseInt(e.target.value));        
     }
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultWallType = await useAPI.getReservations();
+        const result: ResultReservationType = await useAPI.getReservations();
         setLoading(false);
-        
-        console.log(result);
 
         if(result.error !== '') {
             alert(result.error);
         } else {
             setList(result.list);            
+        }
+    }
+
+    const getUnitList = async () => {
+        const result: ResultUnitType = await useAPI.getUnits();        
+        if(result.error === '') {
+            setModalUnitList(result.list);
+        }        
+    }
+
+    const getAreaList = async () => {
+        const result: ResultAreaType = await useAPI.getAreas();        
+        if(result.error === '') {
+            setModalAreaList(result.list);
         }
     }
 
@@ -99,29 +132,27 @@ const Reservations = () => {
 
     const handleNewButton = () => {
         setModalId('');
-        setModalTitle('');
-        setModalFile(null);
+        setModalUnitId(modalUnitList[0].id);
+        setModalAreaId(modalAreaList[0].id);
+        setModalDate('');
 
         setShowModal(true);
-    }
-
-    const handleDownloadButton = (id: string) => {
-        const index = list.findIndex(item => item.id === parseInt(id));
-        //window.open(list[index].fileurl);
     }
 
     const handleEditButton = (id: string) => {        
         const index = list.findIndex(item => item.id === parseInt(id));
         
         setModalId(list[index].id.toString());
-        //setModalTitle(list[index].title);        
+        setModalUnitId(list[index].id_unit);
+        setModalAreaId(list[index].id_area);
+        setModalDate(list[index].reservation_date);   
 
         setShowModal(true);
     }
 
     const handleRemoveButton = async (id: string) => {
         if(window.confirm('Tem certeze que deseja excluir esse item?')) {
-            const result: ResultActionsWallType = await useAPI.removeDocument(id);
+            const result: ResultActionsReservationType = await useAPI.removeDocument(id);
             
             if(result.error === '') {
                 getList();
@@ -132,40 +163,33 @@ const Reservations = () => {
     }
 
     const handleModalSave = async () => {
-        // if(modalTitle) {
-        //     setLoading(true);
-        //     let result: ResultActionsWallType = null;
-        //     const data: DataType = {
-        //         title: modalTitle                           
-        //     }
+        if(modalUnitId && modalAreaId && modalDate) {                        
+            setLoading(true);            
+            let result: ResultReservationType = null;
+            const newDate = modalDate.length === 16 ? `${modalDate}:00` : modalDate;
+            const data: ReservationDataType = {
+                id_unit: modalUnitId,
+                id_area: modalAreaId,
+                reservation_date: newDate.replace('T', ' ')
+            }
             
-        //     if(!modalId) {
-        //         if(modalFile) {
-        //             data.file = modalFile;
-        //             result = await useAPI.addDocument(data);
-        //         } else {
-        //             alert('Selecione um arquivo!');
-        //             setLoading(false);
-        //             return;
-        //         }
-        //     } else {
-        //         if(modalFile) {
-        //             data.file = modalFile;
-        //         }
-        //         result = await useAPI.updateDocument(modalId, data);
-        //     }
+            if(!modalId) {
+                result = await useAPI.addReservation(data);
+            } else {                
+                result = await useAPI.updateReservation(modalId, data);
+            }
             
-        //     setLoading(false);
+            setLoading(false);
             
-        //     if(result.error === '') {
-        //         getList();
-        //         setShowModal(false);
-        //     } else {
-        //         alert(result.error);
-        //     }
-        // } else {
-        //     alert('Preencha todos os campos!')
-        // }
+            if(result.error === '') {
+                getList();
+                setShowModal(false);
+            } else {
+                alert(result.error);
+            }
+        } else {
+            alert('Preencha todos os campos!')
+        }
     }
 
     const columns: GridColDef[] = [
@@ -183,6 +207,7 @@ const Reservations = () => {
                         variant="contained" 
                         color="info"
                         onClick={() => handleEditButton(params.value)}
+                        disabled={modalUnitList.length === 0 || modalAreaList.length === 0 ? true : false}
                     >
                         Editar
                     </Button>
@@ -211,8 +236,9 @@ const Reservations = () => {
                                 variant="contained" 
                                 startIcon={<AddCircleOutlineIcon />}
                                 onClick={handleNewButton}
+                                disabled={modalUnitList.length === 0 || modalAreaList.length === 0 ? true : false}
                             >
-                                Novo Documento
+                                Nova Reserva
                             </Button>
                             <Divider sx={{ margin: '15px 0' }} />
                             <Box>
@@ -252,42 +278,73 @@ const Reservations = () => {
                 <DialogContent dividers>
                     <FormGroup sx={{ gap: '20px' }}>
                         <Box>
-                            <LabelInput htmlFor="modal--title">Título do documento</LabelInput>
+                            <LabelInput htmlFor="modal--unit">Unidades</LabelInput>
+                            <FormControl sx={{ width: '100%' }}>
+                                <InputLabel id="modal--unit">Unidade</InputLabel>
+                                <Select
+                                    labelId="modal--unit"
+                                    id="modal--unit"                                
+                                    label="Unidade"
+                                    value={modalUnitId.toString()}
+                                    onChange={handleInputUnit}                                    
+                                >
+                                    <MenuItem value=""><em>Escolha uma unidade</em></MenuItem>
+                                    {modalUnitList.length > 0&& modalUnitList.map((item, index) => (                                    
+                                        <MenuItem 
+                                            key={index} 
+                                            value={item.id}
+                                            selected={item.id === modalUnitId}
+                                        >
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+
+                        <Box>
+                            <LabelInput htmlFor="modal--area">Áreas</LabelInput>
+                            <FormControl sx={{ width: '100%' }}>
+                                <InputLabel id="modal--area">Área</InputLabel>
+                                <Select
+                                    labelId="modal--area"
+                                    id="modal--area"                                
+                                    label="Área"
+                                    value={modalAreaId.toString()}
+                                    onChange={handleInputArea}                                    
+                                >
+                                    <MenuItem value=""><em>Escolha uma área</em></MenuItem>
+                                    {modalAreaList.length > 0&& modalAreaList.map((item, index) => (                                    
+                                        <MenuItem 
+                                            key={index} 
+                                            value={item.id}
+                                            selected={item.id === modalAreaId}
+                                        >
+                                            {item.title}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box>
+                            <LabelInput htmlFor="modal--date">Data da reserva</LabelInput>
                             <Input                            
-                                id="modal--title"
-                                label="Título"
-                                type="text"
-                                placeholder="Digite um título para seu documento"
+                                id="modal--date"
+                                label="Data"
+                                type="datetime-local"                                
                                 InputProps={{
                                     startAdornment: (
                                     <InputAdornment position="start">
-                                        <TitleIcon />
+                                        <TodayIcon />
                                     </InputAdornment>
                                     ),
                                 }}
-                                value={modalTitle}
-                                onChange={handleInputModalTitle}
+                                value={modalDate}
+                                onChange={handleInputModalDate}                                
                                 disabled={loading ? true : false}        
                             />
                         </Box>                        
-                        <Box>
-                            <LabelInput htmlFor="modal--file">Arquivo (PDF)</LabelInput>
-                            <Input                            
-                                id="modal--body"
-                                label="Arquivo"
-                                type="file"                                                                                      
-                                placeholder="Escolha um arquivo"
-                                InputProps={{
-                                    startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AttachFileIcon />
-                                    </InputAdornment>
-                                    ),
-                                }}                                
-                                onChange={handleInputModalFile}
-                                disabled={loading ? true : false}        
-                            />
-                        </Box>                        
+                                             
                     </FormGroup>
                 </DialogContent>
                 <DialogActions>                    

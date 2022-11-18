@@ -29,7 +29,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { DocumentDataType } from 'src/types/types';
+import { DocumentDataType, DocumentListType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -52,22 +52,17 @@ const Input = styled(TextField)(
 );
 
 const Documents = () => {
-    type ResultWallType = {
+    type ResulDocumentType = {
         error: string;
-        list: ListType[];
+        list: DocumentListType[];
     }
-
-    type ListType = {
-        id: number;
-        title: string;
-        fileurl: string;
-    }    
-    type ResultActionsWallType = {
+    
+    type ResultActionsDocumentType = {
         error: string;
     }    
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<ListType[]>([]);
+    const [list, setList] = useState<DocumentListType[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalFile, setModalFile] = useState<File>();
@@ -82,15 +77,12 @@ const Documents = () => {
     }
     const handleInputModalFile = (e: ChangeEvent<HTMLInputElement>) => {
         setModalFile(e.currentTarget.files[0]);
-        console.log(e.currentTarget.files[0]);
     }
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultWallType = await useAPI.getDocuments();
+        const result: ResulDocumentType = await useAPI.getDocuments();
         setLoading(false);
-        
-        console.log(result);
 
         if(result.error !== '') {
             alert(result.error);
@@ -127,7 +119,7 @@ const Documents = () => {
 
     const handleRemoveButton = async (id: string) => {
         if(window.confirm('Tem certeze que deseja excluir esse item?')) {
-            const result: ResultActionsWallType = await useAPI.removeDocument(id);
+            const result: ResultActionsDocumentType = await useAPI.removeDocument(id);
             
             if(result.error === '') {
                 getList();
@@ -140,7 +132,7 @@ const Documents = () => {
     const handleModalSave = async () => {
         if(modalTitle) {
             setLoading(true);
-            let result: ResultActionsWallType = null;
+            let result: ResulDocumentType = null;
             const data: DocumentDataType = {
                 title: modalTitle                           
             }

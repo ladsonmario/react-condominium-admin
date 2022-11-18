@@ -1,4 +1,4 @@
-import { DocumentDataType, WallDataType } from "src/types/types";
+import { DocumentDataType, WallDataType, ReservationDataType } from "src/types/types";
 
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
@@ -114,6 +114,26 @@ export const useAPI = {
     getReservations: async () => {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('get', '/reservations', {}, token);
+        return json;
+    },
+    getUnits: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/units', {}, token);
+        return json;
+    },
+    getAreas: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/areas', {}, token);
+        return json;
+    },
+    addReservation: async (data: ReservationDataType) => {
+        const token = window.localStorage.getItem('token'); 
+        const json: Promise<any> = await request('post', '/reservations', data, token);
+        return json;    
+    },
+    updateReservation: async (id: string, data: ReservationDataType) => {        
+        const token = window.localStorage.getItem('token');     
+        const json: Promise<any> = await request('put', `/reservation/${id}`, data, token);
         return json;
     }
 }
