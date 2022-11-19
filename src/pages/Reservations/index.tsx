@@ -151,9 +151,9 @@ const Reservations = () => {
     }
 
     const handleRemoveButton = async (id: string) => {
-        if(window.confirm('Tem certeze que deseja excluir esse item?')) {
-            const result: ResultActionsReservationType = await useAPI.removeDocument(id);
-            
+        if(window.confirm('Você deseja excluir esse item?')) {
+            const result: ResultActionsReservationType = await useAPI.removeReservation(id);
+
             if(result.error === '') {
                 getList();
             } else {
@@ -213,8 +213,8 @@ const Reservations = () => {
                     </Button>
                     <Button 
                         variant="contained" 
-                        color="error"
-                        onClick={() => handleRemoveButton(params.value)}
+                        color="error"   
+                        onClick={() => handleRemoveButton(params.value)}                          
                     >
                         Excluir
                     </Button>
