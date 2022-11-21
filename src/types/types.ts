@@ -53,3 +53,14 @@ export type AreaListType = {
     start_time: string;
     title: string;
 }
+
+export type WarningListType = {
+    id: number;
+    id_unit: number;
+    title: string;
+    status: string;
+    datecreated: string;
+    photos: string[];
+    name_unit: string;
+    datecreated_formatted: string;
+}

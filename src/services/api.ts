@@ -140,5 +140,15 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');
         const json: Promise<any> = await request('delete', `/reservation/${id}`, {}, token);
         return json;
+    },
+    getWarnings: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/warnings', {}, token);
+        return json;
+    },
+    updateWarning: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('put', `/warning/${id}`, {}, token);
+        return json;
     }
 }

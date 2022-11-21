@@ -292,8 +292,7 @@ const Reservations = () => {
                                     {modalUnitList.length > 0&& modalUnitList.map((item, index) => (                                    
                                         <MenuItem 
                                             key={index} 
-                                            value={item.id}
-                                            selected={item.id === modalUnitId}
+                                            value={item.id}                                            
                                         >
                                             {item.name}
                                         </MenuItem>
@@ -317,8 +316,7 @@ const Reservations = () => {
                                     {modalAreaList.length > 0&& modalAreaList.map((item, index) => (                                    
                                         <MenuItem 
                                             key={index} 
-                                            value={item.id}
-                                            selected={item.id === modalAreaId}
+                                            value={item.id}                                            
                                         >
                                             {item.title}
                                         </MenuItem>
