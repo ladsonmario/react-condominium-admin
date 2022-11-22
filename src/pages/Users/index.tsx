@@ -18,21 +18,19 @@ import {
     IconButton,    
     FormGroup,
     TextField,
-    InputAdornment,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    SelectChangeEvent    
+    InputAdornment  
 } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
 import LoadingButton from '@mui/lab/LoadingButton';
-import TodayIcon from '@mui/icons-material/Today';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PinIcon from '@mui/icons-material/Pin';
+import KeyIcon from '@mui/icons-material/Key';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { ReservationsType, AreaType, UnitType, ReservationDataType } from 'src/types/types';
+import { UserType, UserDataType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -55,52 +53,48 @@ const Input = styled(TextField)(
 );
 
 const Users = () => {
-    type ResultReservationType = {
+    type ResultUserType = {
         error: string;
-        list: ReservationsType[];
+        list: UserType[];
     }
    
-    type ResultActionsReservationType = {
+    type ResultActionsUserType = {
         error: string;
     } 
-    
-    type ResultUnitType = {
-        error: string;
-        list: UnitType[];
-    }
-
-    type ResultAreaType = {
-        error: string;
-        list: AreaType[];
-    }
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<ReservationsType[]>([]);
+    const [list, setList] = useState<UserType[]>([]);
     const [showModal, setShowModal] = useState(false);    
     const [modalId, setModalId] = useState('');
-    const [modalUnitList, setModalUnitList] = useState<UnitType[]>([]);
-    const [modalAreaList, setModalAreaList] = useState<AreaType[]>([]);    
-    const [modalUnitId, setModalUnitId] = useState(0);
-    const [modalAreaId, setModalAreaId] = useState(0);
-    const [modalDate, setModalDate] = useState('');
+    const [modalName, setModalName] = useState('');
+    const [modalEmail, setModalEmail] = useState('');
+    const [modalCpf, setModalCpf] = useState('');
+    const [modalPassword, setModalPassword] = useState('');
+    const [modalConfirmPassword, setModalConfirmPassword] = useState('');
 
     useEffect(() => {
         getList();
     }, []);
 
-    const handleInputModalDate = (e: ChangeEvent<HTMLInputElement>) => {                
-        setModalDate(e.target.value);
+    const handleNameModal = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalName(e.target.value);
     }
-    const handleInputUnit = (e: SelectChangeEvent) => {
-        setModalUnitId(parseInt(e.target.value));        
+    const handleEmailModal = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalEmail(e.target.value);
     }
-    const handleInputArea = (e: SelectChangeEvent) => {
-        setModalAreaId(parseInt(e.target.value));        
+    const handleCpfModal = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalCpf(e.target.value);
+    }
+    const handlePasswordModal = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalPassword(e.target.value);
+    }
+    const handleConfirmPasswordModal = (e: ChangeEvent<HTMLInputElement>) => {                
+        setModalConfirmPassword(e.target.value);
     }
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultReservationType = await useAPI.getUsers();
+        const result: ResultUserType = await useAPI.getUsers();
         setLoading(false);
 
         if(result.error !== '') {
@@ -116,9 +110,11 @@ const Users = () => {
 
     const handleNewButton = () => {
         setModalId('');
-        setModalUnitId(modalUnitList[0].id);
-        setModalAreaId(modalAreaList[0].id);
-        setModalDate('');
+        setModalName('');
+        setModalEmail('');
+        setModalCpf('');
+        setModalPassword('');
+        setModalConfirmPassword('');
 
         setShowModal(true);
     }
@@ -127,16 +123,18 @@ const Users = () => {
         const index = list.findIndex(item => item.id === parseInt(id));
         
         setModalId(list[index].id.toString());
-        setModalUnitId(list[index].id_unit);
-        setModalAreaId(list[index].id_area);
-        setModalDate(list[index].reservation_date);   
+        setModalName(list[index].name);
+        setModalEmail(list[index].email);
+        setModalCpf(list[index].cpf);
+        setModalPassword('');
+        setModalConfirmPassword('');   
 
         setShowModal(true);
     }
 
     const handleRemoveButton = async (id: string) => {
-        if(window.confirm('Você deseja excluir esse item?')) {
-            const result: ResultActionsReservationType = await useAPI.removeReservation(id);
+        if(window.confirm('Você deseja excluir esse usuário?')) {
+            const result: ResultActionsUserType = await useAPI.removeUser(id);
 
             if(result.error === '') {
                 getList();
@@ -147,20 +145,28 @@ const Users = () => {
     }
 
     const handleModalSave = async () => {
-        if(modalUnitId && modalAreaId && modalDate) {                        
+        if(modalName && modalEmail && modalCpf) {                        
             setLoading(true);            
-            let result: ResultReservationType = null;
-            const newDate = modalDate.length === 16 ? `${modalDate}:00` : modalDate;
-            const data: ReservationDataType = {
-                id_unit: modalUnitId,
-                id_area: modalAreaId,
-                reservation_date: newDate.replace('T', ' ')
+            let result: ResultUserType = null;            
+            const data: UserDataType = {
+                name: modalName,
+                email: modalEmail,
+                cpf: modalCpf
+            }
+            
+            if(modalPassword) {
+                if(modalPassword === modalConfirmPassword) {
+                    data.password = modalName;
+                } else {
+                    alert('Senhas não batem!');
+                    setLoading(false);
+                }
             }
             
             if(!modalId) {
-                result = await useAPI.addReservation(data);
+                result = await useAPI.addUser(data);
             } else {                
-                result = await useAPI.updateReservation(modalId, data);
+                result = await useAPI.updateUser(modalId, data);
             }
             
             setLoading(false);
@@ -190,8 +196,7 @@ const Users = () => {
                     <Button 
                         variant="contained" 
                         color="info"
-                        onClick={() => handleEditButton(params.value)}
-                        disabled={modalUnitList.length === 0 || modalAreaList.length === 0 ? true : false}
+                        onClick={() => handleEditButton(params.value)}                        
                     >
                         Editar
                     </Button>
@@ -219,10 +224,9 @@ const Users = () => {
                             <Button 
                                 variant="contained" 
                                 startIcon={<AddCircleOutlineIcon />}
-                                onClick={handleNewButton}
-                                disabled={modalUnitList.length === 0 || modalAreaList.length === 0 ? true : false}
+                                onClick={handleNewButton}                                
                             >
-                                Nova Reserva
+                                Novo Usuário
                             </Button>
                             <Divider sx={{ margin: '15px 0' }} />
                             <Box>
@@ -230,7 +234,7 @@ const Users = () => {
                                     rows={list}
                                     columns={columns}    
                                     autoHeight={true}    
-                                    loading={loading}                                       
+                                    loading={loading}                                                                                                                                                                     
                                 />
                             </Box>                            
                         </CardContent>
@@ -245,7 +249,7 @@ const Users = () => {
                 maxWidth="sm"
             >
                 <DialogTitle sx={{ m: 0, p: 2 }}>
-                    <Typography variant="h3">{modalId === '' ? 'Novo' : 'Editar'} Documento</Typography>
+                    <Typography variant="h3">{modalId === '' ? 'Novo' : 'Editar'} Usuário</Typography>
                     <IconButton
                         aria-label="close"
                         onClick={handleCloseModal}
@@ -260,73 +264,102 @@ const Users = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent dividers>
-                    <FormGroup sx={{ gap: '20px' }}>
+                    <FormGroup sx={{ gap: '20px' }}>                        
                         <Box>
-                            <LabelInput htmlFor="modal--unit">Unidades</LabelInput>
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel id="modal--unit">Unidade</InputLabel>
-                                <Select
-                                    labelId="modal--unit"
-                                    id="modal--unit"                                
-                                    label="Unidade"
-                                    value={modalUnitId.toString()}
-                                    onChange={handleInputUnit}                                    
-                                >
-                                    <MenuItem value=""><em>Escolha uma unidade</em></MenuItem>
-                                    {modalUnitList.length > 0&& modalUnitList.map((item, index) => (                                    
-                                        <MenuItem 
-                                            key={index} 
-                                            value={item.id}                                            
-                                        >
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-
-                        <Box>
-                            <LabelInput htmlFor="modal--area">Áreas</LabelInput>
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel id="modal--area">Área</InputLabel>
-                                <Select
-                                    labelId="modal--area"
-                                    id="modal--area"                                
-                                    label="Área"
-                                    value={modalAreaId.toString()}
-                                    onChange={handleInputArea}                                    
-                                >
-                                    <MenuItem value=""><em>Escolha uma área</em></MenuItem>
-                                    {modalAreaList.length > 0&& modalAreaList.map((item, index) => (                                    
-                                        <MenuItem 
-                                            key={index} 
-                                            value={item.id}                                            
-                                        >
-                                            {item.title}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                        <Box>
-                            <LabelInput htmlFor="modal--date">Data da reserva</LabelInput>
+                            <LabelInput htmlFor="modal--name">Nome do Usuário</LabelInput>
                             <Input                            
-                                id="modal--date"
-                                label="Data"
-                                type="datetime-local"                                
+                                id="modal--name"
+                                label="Nome"
+                                type="text"    
+                                placeholder="Digite o seu nome"                            
                                 InputProps={{
                                     startAdornment: (
                                     <InputAdornment position="start">
-                                        <TodayIcon />
+                                        <AccountCircleIcon />
                                     </InputAdornment>
                                     ),
                                 }}
-                                value={modalDate}
-                                onChange={handleInputModalDate}                                
+                                value={modalName}
+                                onChange={handleNameModal}                                
                                 disabled={loading ? true : false}        
                             />
-                        </Box>                        
-                                             
+                        </Box>  
+                        <Box>
+                            <LabelInput htmlFor="modal--email">E-mail do Usuário</LabelInput>
+                            <Input                            
+                                id="modal--email"
+                                label="E-mail"
+                                type="email"  
+                                placeholder="Digite o seu e-mail"                               
+                                InputProps={{
+                                    startAdornment: (
+                                    <InputAdornment position="start">
+                                        <AlternateEmailIcon />
+                                    </InputAdornment>
+                                    ),
+                                }}
+                                value={modalEmail}
+                                onChange={handleEmailModal}                                
+                                disabled={loading ? true : false}        
+                            />
+                        </Box>   
+                        <Box>
+                            <LabelInput htmlFor="modal--cpf">CPF do Usuário</LabelInput>
+                            <Input                            
+                                id="modal--cpf"
+                                label="CPF"
+                                type="text"       
+                                placeholder="Digite o seu CPF"                          
+                                InputProps={{
+                                    startAdornment: (
+                                    <InputAdornment position="start">
+                                        <PinIcon />
+                                    </InputAdornment>
+                                    ),
+                                }}
+                                value={modalCpf}
+                                onChange={handleCpfModal}                                
+                                disabled={loading ? true : false}        
+                            />
+                        </Box>   
+                        <Box>
+                            <LabelInput htmlFor="modal--password">Nova Senha</LabelInput>
+                            <Input                            
+                                id="modal--password"
+                                label="Senha"
+                                type="password"
+                                placeholder="Digite uma nova senha"                                
+                                InputProps={{
+                                    startAdornment: (
+                                    <InputAdornment position="start">
+                                        <KeyIcon />
+                                    </InputAdornment>
+                                    ),
+                                }}
+                                value={modalPassword}
+                                onChange={handlePasswordModal}                                
+                                disabled={loading ? true : false}        
+                            />
+                        </Box> 
+                        <Box>
+                            <LabelInput htmlFor="modal--confirm">Confirmar Senha</LabelInput>
+                            <Input                            
+                                id="modal--confirm"
+                                label="Confirmar"
+                                type="password"  
+                                placeholder="Confirme a nova senha"                              
+                                InputProps={{
+                                    startAdornment: (
+                                    <InputAdornment position="start">
+                                        <KeyIcon />
+                                    </InputAdornment>
+                                    ),
+                                }}
+                                value={modalConfirmPassword}
+                                onChange={handleConfirmPasswordModal}                                
+                                disabled={loading ? true : false}        
+                            />
+                        </Box>                                      
                     </FormGroup>
                 </DialogContent>
                 <DialogActions>                    

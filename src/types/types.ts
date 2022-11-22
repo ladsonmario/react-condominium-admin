@@ -81,3 +81,10 @@ export type UserType = {
     email: string;
     cpf: string;
 }
+
+export type UserDataType = {
+    name: string;
+    email: string;
+    cpf: string;
+    password?: string;
+}

@@ -1,4 +1,4 @@
-import { DocumentDataType, WallDataType, ReservationDataType, UserType } from "src/types/types";
+import { DocumentDataType, WallDataType, ReservationDataType, UserDataType } from "src/types/types";
 
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
@@ -171,12 +171,12 @@ export const useAPI = {
         const json: Promise<any> = await request('delete', `/user/${id}`, {}, token);
         return json;
     },
-    addUser: async (data: UserType) => {
+    addUser: async (data: UserDataType) => {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('post', '/users', data, token);
         return json;
     },
-    updateUser: async (id: string, data: UserType) => {
+    updateUser: async (id: string, data: UserDataType) => {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('put', `/user/${id}`, data, token);
         return json;
