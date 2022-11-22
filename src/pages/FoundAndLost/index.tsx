@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { WarningType } from 'src/types/types';
+import { FoundAndLostType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -39,19 +39,18 @@ const Input = styled(TextField)(
     () => `width: 100%;`
 );
 
-const Warnings = () => {
-    type ResultWarningType = {
+const FoundAndLost = () => {
+    type ResultFoundAndLostType = {
         error: string;
-        list: WarningType[];
+        list: FoundAndLostType[];
     }
-    type ResultActionsWarningType = {
+    type ResultActionsFoundAndLostType = {
         error: string;
     }
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<WarningType[]>([]);
-    const [photoList, setPhotoList] = useState<string[]>([]);
-    const [photoListIndex, setPhotoListIndex] = useState(0);
+    const [list, setList] = useState<FoundAndLostType[]>([]);
+    const [photoUrl, setPhotoUrl] = useState('');
 
     useEffect(() => {
         getList();
@@ -59,7 +58,7 @@ const Warnings = () => {
 
     const getList = async () => {
         setLoading(true);
-        const result: ResultWarningType = await useAPI.getWarnings();
+        const result: ResultFoundAndLostType = await useAPI.getFoundAndLost();
         setLoading(false);
 
         if(result.error !== '') {
@@ -72,8 +71,8 @@ const Warnings = () => {
     const handleSwitchClick = async (id: number) => {
         if(window.confirm('Deseja alterar esse item?')) {
             setLoading(true);
-            const result: ResultActionsWarningType = await useAPI.updateWarning(id.toString());
-            setLoading(false);
+            const result: ResultActionsFoundAndLostType = await useAPI.updateFoundAndLost(id.toString());
+            setLoading(false);            
 
             if(result.error === '') {
                 getList();
@@ -83,54 +82,45 @@ const Warnings = () => {
         }
     }
 
-    const showLightbox = (photos: string[]) => {
-        setPhotoListIndex(0);
-        setPhotoList(photos);
+    const showLightbox = (photo: string) => {
+        setPhotoUrl(photo);
     }
 
     const handleCloseLightbox = () => {
-        setPhotoList([]);
-    }
-    const handlePrevPhoto = () => {
-        if(photoList[photoListIndex - 1] !== undefined) {
-            setPhotoListIndex(photoListIndex - 1);
-        }
-    }
-    const handleNextPhoto = () => {
-        if(photoList[photoListIndex + 1] !== undefined) {
-            setPhotoListIndex(photoListIndex + 1);
-        }
+        setPhotoUrl('');
     }
 
     const columns: GridColDef[] = [
         { 
             field: 'status', 
-            headerName: 'Resolvido', 
-            flex: 1, 
-            minWidth: 300,
+            headerName: 'Recuperado', 
+             
+            width: 100,
             renderCell: (params: GridRenderCellParams) => (
-                <Switch 
-                    color="success" 
-                    checked={params.value === 'RESOLVED'} 
-                    onChange={() => handleSwitchClick(params.row.id)}
-                />
+                <>                
+                    <Switch 
+                        color="success" 
+                        checked={params.value === 'recovered'} 
+                        onChange={() => handleSwitchClick(params.row.id)}
+                    />
+                </>
             )
         },        
-        { field: 'name_unit', headerName: 'Unidade', flex: 1, minWidth: 300 },        
-        { field: 'title', headerName: 'Título', flex: 1, minWidth: 300 },        
+        { field: 'where', headerName: 'Local Encontrado', flex: 1, minWidth: 300 },        
+        { field: 'description', headerName: 'Descrição', flex: 1, minWidth: 300 },        
         { 
-            field: 'photos', 
-            headerName: 'Fotos', 
-            flex: 1, 
-            minWidth: 300,
+            field: 'photo', 
+            headerName: 'Foto', 
+            width: 100,
             renderCell: (params: GridRenderCellParams)  => (
                 <>
-                    {params.value &&
+                    {params.row.photo &&
                         <Button 
                             color="success"
-                            onClick={() => showLightbox(params.row.photos)}
+                            variant="contained"
+                            onClick={() => showLightbox(params.row.photo)}
                         >
-                            {params.row.photos.length} foto{params.row.photos.length !== 1 ? 's' : ''}
+                            Ver foto
                         </Button>
                     }                    
                 </>
@@ -142,7 +132,7 @@ const Warnings = () => {
     return (
         <>
             <PageTitleWrapper>
-                <Typography variant="h2">Ocorrências</Typography>
+                <Typography variant="h2">Achados e Perdidos</Typography>
             </PageTitleWrapper>
             <Container>
                 <Box>                                
@@ -161,14 +151,10 @@ const Warnings = () => {
                 </Box>
             </Container>
 
-            {photoList.length > 0 &&
+            {photoUrl &&
                 <Lightbox 
-                    mainSrc={photoList[photoListIndex]}
-                    nextSrc={photoList[photoListIndex + 1]}
-                    prevSrc={photoList[photoListIndex - 1]}
+                    mainSrc={photoUrl}
                     onCloseRequest={handleCloseLightbox}
-                    onMoveNextRequest={handleNextPhoto}
-                    onMovePrevRequest={handlePrevPhoto}
                     reactModalStyle={{ overlay: { zIndex: 999 }}}                    
                 />
             }
@@ -176,4 +162,4 @@ const Warnings = () => {
     );
 }
 
-export default Warnings;
+export default FoundAndLost;

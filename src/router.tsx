@@ -25,6 +25,9 @@ const Wall = Loader(lazy(() => import('src/pages/Wall')));
 const Documents = Loader(lazy(() => import('src/pages/Documents')));
 const Reservations = Loader(lazy(() => import('src/pages/Reservations')));
 const Warnings = Loader(lazy(() => import('src/pages/Warnings')));
+const FoundAndLost = Loader(lazy(() => import('src/pages/FoundAndLost')));
+
+const Users = Loader(lazy(() => import('src/pages/Users')));
 
 // Not Found Page
 const Status404 = Loader(lazy(() => import('src/pages/Status404')));
@@ -41,7 +44,15 @@ const routes: RouteObject[] = [
       { path: 'wall', element: <Wall /> },
       { path: 'documents', element: <Documents /> },
       { path: 'reservations', element: <Reservations /> },
-      { path: 'warnings', element: <Warnings /> }
+      { path: 'warnings', element: <Warnings /> },
+      { path: 'foundandlost', element: <FoundAndLost /> }
+    ]
+  },
+  {
+    path: 'data',
+    element: <SidebarLayout />,
+    children: [
+      { path: 'users', element: <Users /> }
     ]
   },
   { path: '*', element: <Status404 /> }  

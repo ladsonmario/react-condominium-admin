@@ -9,7 +9,7 @@ import {
   Button,
   ListItem
 } from '@mui/material';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
 import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
@@ -249,7 +249,18 @@ function SidebarMenu() {
                 >
                   Ocorrências
                 </Button>
-              </ListItem>              
+              </ListItem>  
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/foundandlost"
+                  startIcon={<LockIcon />}
+                >
+                  Achados e Perdidos
+                </Button>
+              </ListItem>            
             </List>
           </SubMenuWrapper>
         </List>
@@ -268,7 +279,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/users"
+                  to="/data/users"
                   startIcon={<PeopleIcon />}
                 >
                   Usuários
@@ -279,29 +290,18 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/units"
+                  to="/data/units"
                   startIcon={<HolidayVillageIcon />}
                 >
                   Unidades
                 </Button>
-              </ListItem>
+              </ListItem>              
               <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/foundandlost"
-                  startIcon={<LockIcon />}
-                >
-                  Achados e Perdidos
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/commonareas"
+                  to="/data/commonareas"
                   startIcon={<MapsHomeWorkIcon />}
                 >
                   Áreas Comuns

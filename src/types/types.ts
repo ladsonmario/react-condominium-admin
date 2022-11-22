@@ -1,4 +1,4 @@
-export type WallListType = {
+export type WallType = {
     id: number;
     title: string;
     body: string;
@@ -10,7 +10,7 @@ export type WallDataType = {
     body: string;
 }
 
-export type DocumentListType = {
+export type DocumentType = {
     id: number;
     title: string;
     fileurl: string;
@@ -21,7 +21,7 @@ export type DocumentDataType = {
     file?: File;
 }
 
-export type ReservationsListType = {
+export type ReservationsType = {
     id: number;
     id_area: number;
     id_unit: number;
@@ -37,14 +37,14 @@ export type ReservationDataType = {
     reservation_date: string;
 }
 
-export type UnitListType = {
+export type UnitType = {
     id: number;
     id_owner: number;
     name: string;
     name_owner: string;
 }
 
-export type AreaListType = {
+export type AreaType = {
     allowed: number;
     cover: string;
     days: string;
@@ -54,7 +54,7 @@ export type AreaListType = {
     title: string;
 }
 
-export type WarningListType = {
+export type WarningType = {
     id: number;
     id_unit: number;
     title: string;
@@ -63,4 +63,21 @@ export type WarningListType = {
     photos: string[];
     name_unit: string;
     datecreated_formatted: string;
+}
+
+export type FoundAndLostType = {
+    id: number;
+    status: string;
+    photo: string;
+    datecreted: string;
+    datecreated_formatted: string;
+    where: string;
+}
+
+export type UserType = {
+    id: number;
+    name: string;
+    admin: number;
+    email: string;
+    cpf: string;
 }

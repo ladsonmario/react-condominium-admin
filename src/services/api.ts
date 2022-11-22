@@ -1,4 +1,4 @@
-import { DocumentDataType, WallDataType, ReservationDataType } from "src/types/types";
+import { DocumentDataType, WallDataType, ReservationDataType, UserType } from "src/types/types";
 
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
@@ -149,6 +149,36 @@ export const useAPI = {
     updateWarning: async (id: string) => {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('put', `/warning/${id}`, {}, token);
+        return json;
+    },
+    getFoundAndLost: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/foundandlost', {}, token);
+        return json;
+    },
+    updateFoundAndLost: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('put', `/foundandlost/${id}`, {}, token);
+        return json;
+    },
+    getUsers: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/users', {}, token);
+        return json;
+    },
+    removeUser: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('delete', `/user/${id}`, {}, token);
+        return json;
+    },
+    addUser: async (data: UserType) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('post', '/users', data, token);
+        return json;
+    },
+    updateUser: async (id: string, data: UserType) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('put', `/user/${id}`, data, token);
         return json;
     }
 }

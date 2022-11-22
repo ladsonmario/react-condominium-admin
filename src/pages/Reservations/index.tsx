@@ -32,7 +32,7 @@ import TodayIcon from '@mui/icons-material/Today';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { ReservationsListType, AreaListType, UnitListType, ReservationDataType } from 'src/types/types';
+import { ReservationsType, AreaType, UnitType, ReservationDataType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -57,7 +57,7 @@ const Input = styled(TextField)(
 const Reservations = () => {
     type ResultReservationType = {
         error: string;
-        list: ReservationsListType[];
+        list: ReservationsType[];
     }
    
     type ResultActionsReservationType = {
@@ -66,20 +66,20 @@ const Reservations = () => {
     
     type ResultUnitType = {
         error: string;
-        list: UnitListType[];
+        list: UnitType[];
     }
 
     type ResultAreaType = {
         error: string;
-        list: AreaListType[];
+        list: AreaType[];
     }
 
     const [loading, setLoading] = useState(true);
-    const [list, setList] = useState<ReservationsListType[]>([]);
+    const [list, setList] = useState<ReservationsType[]>([]);
     const [showModal, setShowModal] = useState(false);    
     const [modalId, setModalId] = useState('');
-    const [modalUnitList, setModalUnitList] = useState<UnitListType[]>([]);
-    const [modalAreaList, setModalAreaList] = useState<AreaListType[]>([]);    
+    const [modalUnitList, setModalUnitList] = useState<UnitType[]>([]);
+    const [modalAreaList, setModalAreaList] = useState<AreaType[]>([]);    
     const [modalUnitId, setModalUnitId] = useState(0);
     const [modalAreaId, setModalAreaId] = useState(0);
     const [modalDate, setModalDate] = useState('');
