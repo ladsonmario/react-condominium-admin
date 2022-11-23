@@ -1,4 +1,10 @@
-import { DocumentDataType, WallDataType, ReservationDataType, UserDataType } from "src/types/types";
+import { 
+    DocumentDataType, 
+    WallDataType, 
+    ReservationDataType, 
+    UserDataType,
+    AreaDataType 
+} from "src/types/types";
 
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
 
@@ -186,21 +192,21 @@ export const useAPI = {
         const json: Promise<any> = await request('delete', `/area/${id}`, {}, token);
         return json;
     },
-    addArea: async (data: Object) => {
+    addArea: async (data: AreaDataType) => {
         const token = window.localStorage.getItem('token'); 
         const formData = new FormData();
         for(let i in data) {
             formData.append(i, data[i]);
         }        
-        const json: Promise<any> = await requestFormData('post', '/docs', formData, token);
+        const json: Promise<any> = await requestFormData('post', '/areas', formData, token);
         return json;
     },
-    updateArea: async (id: string ,data: Object) => {
+    updateArea: async (id: string ,data: AreaDataType) => {
         const token = window.localStorage.getItem('token'); 
         const formData = new FormData();
         for(let i in data) {
             formData.append(i, data[i]);
-        }        
+        }
         const json: Promise<any> = await requestFormData('post', `/area/${id}`, formData, token);
         return json;
     },

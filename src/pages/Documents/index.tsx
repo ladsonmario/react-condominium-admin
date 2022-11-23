@@ -276,7 +276,7 @@ const Documents = () => {
                         <Box>
                             <LabelInput htmlFor="modal--file">Arquivo (PDF)</LabelInput>
                             <Input                            
-                                id="modal--body"
+                                id="modal--file"
                                 label="Arquivo"
                                 type="file"                                                                                      
                                 placeholder="Escolha um arquivo"

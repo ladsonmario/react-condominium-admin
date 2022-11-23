@@ -19,7 +19,6 @@ import {
     FormGroup,
     TextField,
     InputAdornment,
-    SelectChangeEvent,
     Switch,
     CardMedia,   
     Checkbox,
@@ -35,7 +34,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { AreaType } from 'src/types/types';
+import { AreaType, AreaDataType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -80,7 +79,16 @@ const ListDayWords = ({ item }: Props) => {
     }
 
     return (
-        <Box>{dayString.join(', ')}</Box>
+        <>
+            {dayString.length < 7 &&
+                <Box  sx={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+                    {dayString.join(', ')}
+                </Box>
+            }
+            {dayString.length === 7 &&
+                <Box>Todos os dias</Box>
+            }
+        </>        
     );
 }
 
@@ -98,7 +106,6 @@ const CommonAreas = () => {
     const [list, setList] = useState<AreaType[]>([]);
     const [showModal, setShowModal] = useState(false);    
     const [modalId, setModalId] = useState('');
-
     const [modalAllowed, setModalAllowed] = useState(1);
     const [modalTitle, setModalTitle] = useState('');
     const [modalCover, setModalCover] = useState<File>();
@@ -117,7 +124,7 @@ const CommonAreas = () => {
         setModalTitle(e.target.value);
     }
     const handleInputModalCover = (e: ChangeEvent<HTMLInputElement>) => {                
-        setModalCover(e.target.files[0]);
+        setModalCover(e.currentTarget.files[0]);
     }
     const handleInputModalStartTime = (e: ChangeEvent<HTMLInputElement>) => {                
         setModalStartTime(e.target.value);
@@ -158,6 +165,7 @@ const CommonAreas = () => {
         setModalAllowed(1);
         setModalTitle('');
         setModalCover(null);
+        setModalDays([]);
         setModalStartTime('');
         setModalEndTime('');
 
@@ -167,17 +175,20 @@ const CommonAreas = () => {
     const handleEditButton = (id: string) => {        
         const index = list.findIndex(item => item.id === parseInt(id));
         
-        setModalId(list[index].id.toString());
-        // setModalUnitId(list[index].id_unit);
-        // setModalAreaId(list[index].id_area);
-        // setModalDate(list[index].reservation_date);   
+        setModalId(list[index].id.toString());        
+        setModalAllowed(list[index].allowed);
+        setModalTitle(list[index].title);
+        setModalCover(null);
+        setModalDays(list[index].days.split(','));
+        setModalStartTime(list[index].start_time);
+        setModalEndTime(list[index].end_time);  
 
         setShowModal(true);
     }
 
     const handleRemoveButton = async (id: string) => {
         if(window.confirm('Você deseja excluir esse item?')) {
-            const result: ResultActionsAreaType = await useAPI.removeReservation(id);
+            const result: ResultActionsAreaType = await useAPI.removeArea(id);
 
             if(result.error === '') {
                 getList();
@@ -188,33 +199,38 @@ const CommonAreas = () => {
     }
 
     const handleModalSave = async () => {
-        // if(modalUnitId && modalAreaId && modalDate) {                        
-        //     setLoading(true);            
-        //     let result: ResultAreaType = null;
-        //     const newDate = modalDate.length === 16 ? `${modalDate}:00` : modalDate;
-        //     const data: ReservationDataType = {
-        //         id_unit: modalUnitId,
-        //         id_area: modalAreaId,
-        //         reservation_date: newDate.replace('T', ' ')
-        //     }
+        if(modalTitle && modalStartTime && modalEndTime) {                        
+            setLoading(true);            
+            let result: ResultAreaType = null;            
+            const data: AreaDataType = {
+                allowed: modalAllowed,
+                title: modalTitle,
+                days: modalDays.join(','),
+                start_time: modalStartTime,
+                end_time: modalEndTime
+            }
             
-        //     if(!modalId) {
-        //         result = await useAPI.addReservation(data);
-        //     } else {                
-        //         result = await useAPI.updateReservation(modalId, data);
-        //     }
+            if(modalCover) {
+                data.cover = modalCover;
+            }
+
+            if(!modalId) {
+                result = await useAPI.addArea(data);
+            } else {                
+                result = await useAPI.updateArea(modalId, data);
+            }
             
-        //     setLoading(false);
+            setLoading(false);
             
-        //     if(result.error === '') {
-        //         getList();
-        //         setShowModal(false);
-        //     } else {
-        //         alert(result.error);
-        //     }
-        // } else {
-        //     alert('Preencha todos os campos!')
-        // }
+            if(result.error === '') {
+                getList();
+                setShowModal(false);
+            } else {
+                alert(result.error);
+            }
+        } else {
+            alert('Preencha todos os campos!')
+        }
     }
 
     const handleSwitchClick = async (id: number) => {
@@ -235,7 +251,8 @@ const CommonAreas = () => {
         { 
             field: 'allowed', 
             headerName: 'Ativo',             
-            width: 70,            
+            width: 70,   
+            sortable: false,         
             filterable: false,
             hideable: false,
             disableColumnMenu: true,
@@ -268,9 +285,8 @@ const CommonAreas = () => {
         { 
             field: 'title', 
             headerName: 'Título', 
-            flex: 1, 
-            minWidth: 300,
-            disableColumnMenu: true,  
+            width: 250,
+            sortable: false,  
             hideable: false         
         },        
         { 
@@ -281,6 +297,7 @@ const CommonAreas = () => {
             disableColumnMenu: true,  
             hideable: false,
             sortable: false,
+            filterable: false,            
             renderCell: (params: GridRenderCellParams) => <ListDayWords item={params} />
         },        
         { 
@@ -303,9 +320,8 @@ const CommonAreas = () => {
         },      
         { 
             field: 'id', 
-            headerName: 'Ações',              
-            flex: 1,
-            minWidth: 250,
+            headerName: 'Ações', 
+            width: 180,
             sortable: false,
             filterable: false,
             hideable: false,
@@ -353,7 +369,8 @@ const CommonAreas = () => {
                                     rows={list}
                                     columns={columns}    
                                     autoHeight={true}    
-                                    loading={loading}                                                                           
+                                    loading={loading} 
+                                    rowHeight={100}                                                                          
                                 />
                             </Box>                            
                         </CardContent>

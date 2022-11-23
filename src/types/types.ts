@@ -54,6 +54,15 @@ export type AreaType = {
     title: string;
 }
 
+export type AreaDataType = {
+    allowed: number;
+    title: string;
+    days: string;
+    start_time: string;
+    end_time: string;
+    cover?: File;
+}
+
 export type WarningType = {
     id: number;
     id_unit: number;
