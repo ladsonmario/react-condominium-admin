@@ -120,12 +120,7 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('get', '/units', {}, token);
         return json;
-    },
-    getAreas: async () => {
-        const token = window.localStorage.getItem('token');        
-        const json: Promise<any> = await request('get', '/areas', {}, token);
-        return json;
-    },
+    },    
     addReservation: async (data: ReservationDataType) => {
         const token = window.localStorage.getItem('token'); 
         const json: Promise<any> = await request('post', '/reservations', data, token);
@@ -180,5 +175,38 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('put', `/user/${id}`, data, token);
         return json;
+    },
+    getAreas: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/areas', {}, token);
+        return json;
+    },
+    removeArea: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('delete', `/area/${id}`, {}, token);
+        return json;
+    },
+    addArea: async (data: Object) => {
+        const token = window.localStorage.getItem('token'); 
+        const formData = new FormData();
+        for(let i in data) {
+            formData.append(i, data[i]);
+        }        
+        const json: Promise<any> = await requestFormData('post', '/docs', formData, token);
+        return json;
+    },
+    updateArea: async (id: string ,data: Object) => {
+        const token = window.localStorage.getItem('token'); 
+        const formData = new FormData();
+        for(let i in data) {
+            formData.append(i, data[i]);
+        }        
+        const json: Promise<any> = await requestFormData('post', `/area/${id}`, formData, token);
+        return json;
+    },
+    updateAreaAllowed: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('put', `/area/${id}/allowed`, {}, token);
+        return json; 
     }
 }
