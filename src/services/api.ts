@@ -15,7 +15,7 @@ const request = async (method: string, endpoint: string, params: Object, token?:
 
     switch(method) {
         case 'GET':
-            let queryString = new URLSearchParams(params.toString()).toString();
+            let queryString = new URLSearchParams(params as string).toString();
             fullUrl += `?${queryString}`;            
         break;
         case 'POST':
@@ -121,12 +121,7 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('get', '/reservations', {}, token);
         return json;
-    },
-    getUnits: async () => {
-        const token = window.localStorage.getItem('token');        
-        const json: Promise<any> = await request('get', '/units', {}, token);
-        return json;
-    },    
+    },       
     addReservation: async (data: ReservationDataType) => {
         const token = window.localStorage.getItem('token'); 
         const json: Promise<any> = await request('post', '/reservations', data, token);
@@ -214,5 +209,15 @@ export const useAPI = {
         const token = window.localStorage.getItem('token');        
         const json: Promise<any> = await request('put', `/area/${id}/allowed`, {}, token);
         return json; 
-    }
+    },
+    getUnits: async () => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/units', {}, token);
+        return json;
+    },
+    searchUser: async (query: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('get', '/users/search', { q: query }, token);
+        return json;
+    }, 
 }

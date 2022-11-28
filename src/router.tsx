@@ -29,6 +29,7 @@ const FoundAndLost = Loader(lazy(() => import('src/pages/FoundAndLost')));
 
 const Users = Loader(lazy(() => import('src/pages/Users')));
 const CommonAreas = Loader(lazy(() => import('src/pages/CommonAreas')));
+const Units = Loader(lazy(() => import('src/pages/Units')));
 
 // Not Found Page
 const Status404 = Loader(lazy(() => import('src/pages/Status404')));
@@ -54,7 +55,8 @@ const routes: RouteObject[] = [
     element: <SidebarLayout />,
     children: [
       { path: 'users', element: <Users /> },
-      { path: 'commonareas', element: <CommonAreas /> }
+      { path: 'commonareas', element: <CommonAreas /> },
+      { path: 'units', element: <Units /> }
     ]
   },
   { path: '*', element: <Status404 /> }  
