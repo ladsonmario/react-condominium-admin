@@ -322,25 +322,30 @@ function SidebarMenu() {
             <List component="div">
               <ListItem component="div">
                 <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/profile"
+                  disableRipple                  
+                  onClick={closeSidebar}                  
                   startIcon={<AccountCircleIcon />}
                 >
                   Meu Perfil
                 </Button>
               </ListItem>
               <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/logout"
-                  startIcon={<LogoutIcon />}
-                >
-                  Sair
-                </Button>
+                
+                  <Button
+                    disableRipple                  
+                    onClick={closeSidebar}                  
+                    startIcon={<LogoutIcon />}
+                  >
+                    <RouterLink 
+                      to="/logout" 
+                      style={{ 
+                        color: '#fff', 
+                        textDecoration: 'none' 
+                      }}
+                    >
+                      Sair
+                    </RouterLink>
+                  </Button>                
               </ListItem>              
             </List>
           </SubMenuWrapper>

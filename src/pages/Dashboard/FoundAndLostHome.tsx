@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -18,6 +19,11 @@ import TrendingUp from '@mui/icons-material/TrendingUp';
 import Text from 'src/components/Text';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import { useAPI } from 'src/services/api';
+import { FoundAndLostType, ResultFoundAndLostType } from 'src/types/types';
+import { Link } from 'react-router-dom';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -55,7 +61,38 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
 `
 );
 
-function AccountBalance() {
+function FoundAndLostHome() {  
+  const [list, setList] = useState<FoundAndLostType[]>([]);
+  const [recovered, setRecovered] = useState(0);
+  const [lost, setLost] = useState(0);
+
+  useEffect(() => {
+    ( async () => {
+      const result: ResultFoundAndLostType = await useAPI.getFoundAndLost();
+      if(result.error === '') setList(result.list);
+    })();
+  }, []);
+
+  useEffect(() => {
+    const itemsRecovered: FoundAndLostType[] = []; 
+    const itemsLost: FoundAndLostType[] = [];
+
+    for(let i = 0; i < list.length; i++) {               
+      if(list[i].status === 'recovered') {
+        itemsRecovered.push(list[i]);        
+      } else {
+        itemsLost.push(list[i]);
+      }        
+    }
+
+    setLost(itemsLost.length + 1);
+    setRecovered(itemsRecovered.length + 1);
+  }, [list]);
+
+  const percentFormat = (n: number) => {    
+    return `${((n * 100) / list.length).toFixed(2)}%`;
+  }
+
   const theme = useTheme();
 
   const chartOptions: ApexOptions = {
@@ -73,11 +110,11 @@ function AccountBalance() {
         }
       }
     },
-    colors: ['#ff9900', '#1c81c2', '#333', '#5c6ac0'],
+    colors: ['#3835FB', '#F12B2B'],
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return val + '%';
+        return parseInt(val.toString()) + '%';
       },
       style: {
         colors: [theme.colors.alpha.trueWhite[100]]
@@ -110,7 +147,7 @@ function AccountBalance() {
     fill: {
       opacity: 1
     },
-    labels: ['Bitcoin', 'Ripple', 'Cardano', 'Ethereum'],
+    labels: ['Achados', 'Perdidos'],
     legend: {
       labels: {
         colors: theme.colors.alpha.trueWhite[100]
@@ -125,7 +162,7 @@ function AccountBalance() {
     }
   };
 
-  const chartSeries = [10, 20, 25, 45];
+  const chartSeries = [recovered, lost];
 
   return (
     <Card>
@@ -138,18 +175,18 @@ function AccountBalance() {
               }}
               variant="h4"
             >
-              Account Balance
+              Achados e Perdidos
             </Typography>
             <Box>
               <Typography variant="h1" gutterBottom>
-                $54,584.23
+                Total de {list.length + 1}
               </Typography>
               <Typography
                 variant="h4"
                 fontWeight="normal"
                 color="text.secondary"
               >
-                1.0045983485234 BTC
+                {recovered} itens recuperados
               </Typography>
               <Box
                 display="flex"
@@ -167,23 +204,20 @@ function AccountBalance() {
                   <TrendingUp fontSize="large" />
                 </AvatarSuccess>
                 <Box>
-                  <Typography variant="h4">+ $3,594.00</Typography>
-                  <Typography variant="subtitle2" noWrap>
-                    this month
+                  <Typography variant="h4">A taxa de itens recuperados</Typography>
+                  <Typography variant="subtitle2" noWrap sx={{ whiteSpace: 'pre-line' }}>
+                    Vem subindo a cada dia mais com a boa ação das pessoais ao fazer a sua devolução.
                   </Typography>
                 </Box>
               </Box>
             </Box>
-            <Grid container spacing={3}>
+            <Grid container spacing={3}>              
               <Grid sm item>
-                <Button fullWidth variant="outlined">
-                  Send
-                </Button>
-              </Grid>
-              <Grid sm item>
-                <Button fullWidth variant="contained">
-                  Receive
-                </Button>
+                <Link to="/management/foundandlost">
+                  <Button fullWidth variant="contained">
+                    Ir para Achados e Perdidos
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
           </Box>
@@ -232,38 +266,31 @@ function AccountBalance() {
                 >
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
-                      <img
-                        alt="BTC"
-                        src="/static/images/placeholders/logo/bitcoin.png"
-                      />
+                      <InsertEmoticonIcon />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="BTC"
+                      primary="Itens"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Bitcoin"
+                      secondary="Recuperados"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
                       }}
                     />
                     <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        20%
-                      </Typography>
-                      <Text color="success">+2.54%</Text>
+                      <Typography align="right" variant="h4" noWrap>                        
+                        <Text color="success">{percentFormat(recovered)}</Text>
+                      </Typography>                      
                     </Box>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
-                      <img
-                        alt="XRP"
-                        src="/static/images/placeholders/logo/ripple.png"
-                      />
+                      <SentimentVeryDissatisfiedIcon />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="XRP"
+                      primary="Itens"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ripple"
+                      secondary="Perdidos"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
@@ -271,57 +298,10 @@ function AccountBalance() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        10%
-                      </Typography>
-                      <Text color="error">-1.22%</Text>
+                        <Text color="error">{percentFormat(lost)}</Text>
+                      </Typography>                      
                     </Box>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="ADA"
-                        src="/static/images/placeholders/logo/cardano.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="ADA"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Cardano"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        40%
-                      </Typography>
-                      <Text color="success">+10.50%</Text>
-                    </Box>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="ETH"
-                        src="/static/images/placeholders/logo/ethereum.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="ETH"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ethereum"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        30%
-                      </Typography>
-                      <Text color="error">-12.38%</Text>
-                    </Box>
-                  </ListItem>
+                  </ListItem>                  
                 </List>
               </Grid>
             </Grid>
@@ -332,4 +312,4 @@ function AccountBalance() {
   );
 }
 
-export default AccountBalance;
+export default FoundAndLostHome;

@@ -3,7 +3,8 @@ import {
     WallDataType, 
     ReservationDataType, 
     UserDataType,
-    AreaDataType 
+    AreaDataType,
+    UnitDataType 
 } from "src/types/types";
 
 const BASE = 'https://api.b7web.com.br/devcond/api/admin';
@@ -24,7 +25,7 @@ const request = async (method: string, endpoint: string, params: Object, token?:
             body = JSON.stringify(params);
         break;
     }
-    
+
     let req = await fetch(fullUrl, {
         method,
         headers: {
@@ -220,4 +221,19 @@ export const useAPI = {
         const json: Promise<any> = await request('get', '/users/search', { q: query }, token);
         return json;
     }, 
+    addUnit: async (data: UnitDataType) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('post', '/units', data, token);
+        return json;
+    },
+    updateUnit: async (id: string, data: UnitDataType) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('put', `/unit/${id}`, data, token);
+        return json;
+    },
+    removeUnit: async (id: string) => {
+        const token = window.localStorage.getItem('token');        
+        const json: Promise<any> = await request('delete', `/unit/${id}`, {}, token);
+        return json;
+    }
 }

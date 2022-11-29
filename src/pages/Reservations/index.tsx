@@ -32,7 +32,7 @@ import TodayIcon from '@mui/icons-material/Today';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { ReservationsType, AreaType, UnitType, ReservationDataType } from 'src/types/types';
+import { ReservationsType, AreaType, UnitType, ReservationDataType, ResultReservationType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -55,11 +55,6 @@ const Input = styled(TextField)(
 );
 
 const Reservations = () => {
-    type ResultReservationType = {
-        error: string;
-        list: ReservationsType[];
-    }
-   
     type ResultActionsReservationType = {
         error: string;
     } 

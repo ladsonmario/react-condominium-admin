@@ -32,7 +32,7 @@ import TitleIcon from '@mui/icons-material/Title';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { UnitType, UserType } from 'src/types/types';
+import { UnitType, UserType, UnitDataType } from 'src/types/types';
 
 let timer = 0;
 
@@ -73,7 +73,7 @@ const Units = () => {
     const [modalName, setModalName] = useState('');
     const [modalOwnerSearch, setModalOwnerSearch] = useState('');
     const [modalOwnerList, setModalOwnerList] = useState<UserType[]>([]);
-    const [modalOwner, setModalOwner] = useState<UserType>(null);
+    const [modalOwner, setModalOwner] = useState<UnitType>(null);
 
     useEffect(() => {
         getList();
@@ -129,6 +129,11 @@ const Units = () => {
 
     const handleNewButton = () => {
         setModalId('');
+        setModalName('');
+        setModalOwner(null);
+        setModalOwnerList([]);
+        setModalOwnerSearch('');
+
         setShowModal(true);
     }
 
@@ -136,16 +141,25 @@ const Units = () => {
         const index = list.findIndex(item => item.id === parseInt(id));
         
         setModalId(list[index].id.toString());
-        // setModalUnitId(list[index].id_unit);
-        // setModalAreaId(list[index].id_area);
-        // setModalDate(list[index].reservation_date);   
+        setModalName(list[index].name);        
+        setModalOwnerList([]);
+        setModalOwnerSearch('');   
+        
+        if(list[index].name) {
+            setModalOwner({
+                name: list[index].name_owner,
+                id: list[index].id_owner
+            });
+        } else {
+            setModalOwner(null);
+        }
 
         setShowModal(true);
     }
 
     const handleRemoveButton = async (id: string) => {
         if(window.confirm('Você deseja excluir esse item?')) {
-            const result: ResultActionsUnitType = await useAPI.removeReservation(id);
+            const result: ResultActionsUnitType = await useAPI.removeUnit(id);
 
             if(result.error === '') {
                 getList();
@@ -156,33 +170,31 @@ const Units = () => {
     }
 
     const handleModalSave = async () => {
-        // if(modalUnitId && modalAreaId && modalDate) {                        
-        //     setLoading(true);            
-        //     let result: ResultUnitType = null;
-        //     const newDate = modalDate.length === 16 ? `${modalDate}:00` : modalDate;
-        //     const data: ReservationDataType = {
-        //         id_unit: modalUnitId,
-        //         id_area: modalAreaId,
-        //         reservation_date: newDate.replace('T', ' ')
-        //     }
+        if(modalName) {                        
+            setLoading(true);            
+            let result: ResultUnitType = null;            
+            const data: UnitDataType = {
+                name: modalName,
+                id_owner: modalOwner.id
+            }
             
-        //     if(!modalId) {
-        //         result = await useAPI.addReservation(data);
-        //     } else {                
-        //         result = await useAPI.updateReservation(modalId, data);
-        //     }
+            if(!modalId) {
+                result = await useAPI.addUnit(data);
+            } else {                
+                result = await useAPI.updateUnit(modalId, data);
+            }
             
-        //     setLoading(false);
+            setLoading(false);
             
-        //     if(result.error === '') {
-        //         getList();
-        //         setShowModal(false);
-        //     } else {
-        //         alert(result.error);
-        //     }
-        // } else {
-        //     alert('Preencha todos os campos!')
-        // }
+            if(result.error === '') {
+                getList();
+                setShowModal(false);
+            } else {
+                alert(result.error);
+            }
+        } else {
+            alert('Preencha todos os campos!')
+        }
     }
 
     const handleResetOwnerButton = () => {

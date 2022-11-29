@@ -2,15 +2,16 @@ import { styled } from '@mui/material';
 
 type Props = {
     size: string;
-    measure: string
+    measure: string;
+    icoImg?: boolean;
 }
 
-export const LogoImg = ({ size, measure }: Props) => {
+export const LogoImg = ({ size, measure, icoImg }: Props) => {
     const LogoImg = styled('img')(
         () => `
           width: ${size}${measure};
         `
     );
          
-    return <LogoImg src="/homelogo.png" />;
+    return <LogoImg src={icoImg ? '/favicon.png' : '/homelogo.png'} />;
 }

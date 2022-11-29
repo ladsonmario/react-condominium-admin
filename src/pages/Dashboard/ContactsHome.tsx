@@ -37,8 +37,8 @@ const AvatarWrapperWarning = styled(Avatar)(
 `
 );
 
-function AccountSecurity() {
-  const [checked, setChecked] = useState(['phone_verification']);
+function ContactsHome() {
+  const [checked, setChecked] = useState(['phone_verification', '2fa', 'recovery_email']);
 
   const handleToggle = (value: string) => () => {
     const currentIndex = checked.indexOf(value);
@@ -55,7 +55,7 @@ function AccountSecurity() {
 
   return (
     <Card>
-      <CardHeader title="Account Security" />
+      <CardHeader title="Contatos de Emergência" />
       <Divider />
       <List disablePadding>
         <ListItem
@@ -69,7 +69,7 @@ function AccountSecurity() {
             </AvatarWrapperError>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">2FA Authentication</Text>}
+            primary={<Text color="black">Furtos e Roubos</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -77,7 +77,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="error">Disabled</Text>}
+            secondary={<Text color="error">(00) 0000-0000</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch
@@ -99,7 +99,7 @@ function AccountSecurity() {
             </AvatarWrapperSuccess>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">Phone Verification</Text>}
+            primary={<Text color="black">Ocorrências</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -107,7 +107,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="success">Active</Text>}
+            secondary={<Text color="success">(00) 1111-1111</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch
@@ -117,6 +117,8 @@ function AccountSecurity() {
             checked={checked.indexOf('phone_verification') !== -1}
           />
         </ListItem>
+        <Divider />        
+        <CardHeader title="E-mail" />
         <Divider />
         <ListItem
           sx={{
@@ -129,7 +131,7 @@ function AccountSecurity() {
             </AvatarWrapperWarning>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">Recovery Email</Text>}
+            primary={<Text color="black">Suporte</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -137,7 +139,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="warning">Not completed</Text>}
+            secondary={<Text color="warning">suporte@suporte.com</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch
@@ -152,4 +154,4 @@ function AccountSecurity() {
   );
 }
 
-export default AccountSecurity;
+export default ContactsHome;

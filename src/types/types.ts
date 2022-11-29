@@ -37,11 +37,21 @@ export type ReservationDataType = {
     reservation_date: string;
 }
 
+export type ResultReservationType = {
+    error: string;
+    list: ReservationsType[];
+}
+
 export type UnitType = {
     id: number;
-    id_owner: number;
+    id_owner?: number;
     name: string;
-    name_owner: string;
+    name_owner?: string;
+}
+
+export type UnitDataType = {
+    name: string;
+    id_owner: number;
 }
 
 export type AreaType = {
@@ -63,6 +73,11 @@ export type AreaDataType = {
     cover?: File;
 }
 
+export type ResultAreaType = {
+    error: string;
+    list: AreaType[];
+}
+
 export type WarningType = {
     id: number;
     id_unit: number;
@@ -81,6 +96,11 @@ export type FoundAndLostType = {
     datecreted: string;
     datecreated_formatted: string;
     where: string;
+}
+
+export type ResultFoundAndLostType = {
+    error: string;
+    list: FoundAndLostType[];
 }
 
 export type UserType = {

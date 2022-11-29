@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import {
   Avatar,
@@ -16,12 +16,10 @@ import {
   Typography
 } from '@mui/material';
 
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -60,9 +58,9 @@ const UserBoxDescription = styled(Typography)(
 
 function HeaderUserbox() {
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg',
-    jobtitle: 'Project Manager'
+    name: 'Jon Snow',
+    avatar: '/static/images/avatars/prof.png',
+    jobtitle: 'Administrador'
   };
 
   const ref = useRef<any>(null);
@@ -118,27 +116,17 @@ function HeaderUserbox() {
         <List sx={{ p: 1 }} component="nav">
           <ListItem button to="/management/profile/details" component={NavLink}>
             <AccountBoxTwoToneIcon fontSize="small" />
-            <ListItemText primary="My Profile" />
-          </ListItem>
-          <ListItem button to="/dashboards/messenger" component={NavLink}>
-            <InboxTwoToneIcon fontSize="small" />
-            <ListItemText primary="Messenger" />
-          </ListItem>
-          <ListItem
-            button
-            to="/management/profile/settings"
-            component={NavLink}
-          >
-            <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary="Account Settings" />
-          </ListItem>
+            <ListItemText primary="Minha Conta" />
+          </ListItem>          
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
+          <Link to="/logout">
+            <Button color="primary" fullWidth>
+              <LockOpenTwoToneIcon sx={{ mr: 1 }} />
+              Sair
+            </Button>
+          </Link>
         </Box>
       </Popover>
     </>

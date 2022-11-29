@@ -34,7 +34,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { AreaType, AreaDataType } from 'src/types/types';
+import { AreaType, AreaDataType, ResultAreaType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -93,11 +93,6 @@ const ListDayWords = ({ item }: Props) => {
 }
 
 const CommonAreas = () => {
-    type ResultAreaType = {
-        error: string;
-        list: AreaType[];
-    }
-   
     type ResultActionsAreaType = {
         error: string;
     }

@@ -16,7 +16,8 @@ import { SidebarContext } from 'src/contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 import HeaderUserbox from './Userbox';
-import HeaderMenu from './Menu';
+import { LogoImg } from 'src/components/LogoImg';
+import { Link } from 'react-router-dom';
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -45,7 +46,7 @@ function Header() {
     <HeaderWrapper
       display="flex"
       alignItems="center"
-      sx={{
+      sx={{        
         boxShadow:
           theme.palette.mode === 'dark'
             ? `0 1px 0 ${alpha(
@@ -61,13 +62,15 @@ function Header() {
               )}`
       }}
     >
+      <Link to="/">
+        <LogoImg size="70" measure="px" icoImg />
+      </Link>      
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem />}
         alignItems="center"
         spacing={2}
       >
-        <HeaderMenu />
       </Stack>
       <Box display="flex" alignItems="center">        
         <HeaderUserbox />

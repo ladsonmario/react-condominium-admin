@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { FoundAndLostType } from 'src/types/types';
+import { FoundAndLostType, ResultFoundAndLostType } from 'src/types/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -40,10 +40,6 @@ const Input = styled(TextField)(
 );
 
 const FoundAndLost = () => {
-    type ResultFoundAndLostType = {
-        error: string;
-        list: FoundAndLostType[];
-    }
     type ResultActionsFoundAndLostType = {
         error: string;
     }

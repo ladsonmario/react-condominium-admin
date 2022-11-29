@@ -3,12 +3,11 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Container, Grid } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import AccountBalance from './AccountBalance';
-import Wallets from './Wallets';
-import AccountSecurity from './AccountSecurity';
-import WatchList from './WatchList';
+import FoundAndLostHome from './FoundAndLostHome';
+import AreaHome from './AreaHome';
+import ContactsHome from './ContactsHome';
 
-function DashboardCrypto() {
+function Dashboard() {
   return (
     <>      
       <PageTitleWrapper>
@@ -23,17 +22,14 @@ function DashboardCrypto() {
           spacing={4}
         >
           <Grid item xs={12}>
-            <AccountBalance />
+            <FoundAndLostHome />
           </Grid>
           <Grid item lg={8} xs={12}>
-            <Wallets />
+            <AreaHome />
           </Grid>
           <Grid item lg={4} xs={12}>
-            <AccountSecurity />
-          </Grid>
-          <Grid item xs={12}>
-            <WatchList />
-          </Grid>
+            <ContactsHome />
+          </Grid>          
         </Grid>
       </Container>
       <Footer />
@@ -41,4 +37,4 @@ function DashboardCrypto() {
   );
 }
 
-export default DashboardCrypto;
+export default Dashboard;
