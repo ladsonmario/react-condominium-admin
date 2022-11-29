@@ -330,22 +330,23 @@ function SidebarMenu() {
                 </Button>
               </ListItem>
               <ListItem component="div">
-                
+                  <RouterLink 
+                      to="/logout" 
+                      style={{ 
+                        color: '#fff', 
+                        textDecoration: 'none',
+                        width: '100%'                        
+                      }}
+                    >
                   <Button
                     disableRipple                  
                     onClick={closeSidebar}                  
                     startIcon={<LogoutIcon />}
-                  >
-                    <RouterLink 
-                      to="/logout" 
-                      style={{ 
-                        color: '#fff', 
-                        textDecoration: 'none' 
-                      }}
-                    >
+                  >                    
                       Sair
-                    </RouterLink>
-                  </Button>                
+                    
+                  </Button>
+                  </RouterLink>                
               </ListItem>              
             </List>
           </SubMenuWrapper>

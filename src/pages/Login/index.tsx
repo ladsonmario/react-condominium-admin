@@ -99,7 +99,7 @@ const Login = () => {
 
             if(result.token) {                
                 localStorage.setItem('token', result.token);                
-                window.location.href="/";                
+                window.location.href = '/';                
             } else {
                 setError(result.error);
             }

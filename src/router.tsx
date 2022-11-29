@@ -65,7 +65,7 @@ const routes: RouteObject[] = [
 export const AuthRouter = () => {
   return useRoutes([
     { path: '/login',  element: <Login /> },
-    { path: '/logout', element: <Logout /> }
+    { path: '/logout', element: <Logout /> }    
   ]);
 }
 

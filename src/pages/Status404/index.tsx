@@ -3,8 +3,7 @@ import {
   Card,
   Typography,
   Container,
-  Button,
-  OutlinedInput,
+  Button
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
