@@ -3,13 +3,9 @@ import {
   Card,
   Typography,
   Container,
-  Divider,
   Button,
-  FormControl,
   OutlinedInput,
-  InputAdornment
 } from '@mui/material';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 
 import { styled } from '@mui/material/styles';
 
@@ -25,18 +21,6 @@ const MainContent = styled(Box)(
 `
 );
 
-const OutlinedInputWrapper = styled(OutlinedInput)(
-  ({ theme }) => `
-    background-color: ${theme.colors.alpha.white[100]};
-`
-);
-
-const ButtonSearch = styled(Button)(
-  ({ theme }) => `
-    margin-right: -${theme.spacing(1)};
-`
-);
-
 function Status404() {
   return (
     <>      
@@ -45,7 +29,7 @@ function Status404() {
           <Box textAlign="center">
             <img alt="404" height={180} src="/static/images/status/404.svg" />
             <Typography variant="h2" sx={{ my: 2 }}>
-              The page you were looking for doesn't exist.
+              A página que você procura não existe.
             </Typography>
             <Typography
               variant="h4"
@@ -53,33 +37,13 @@ function Status404() {
               fontWeight="normal"
               sx={{ mb: 4 }}
             >
-              It's on us, we moved the content to a different page. The search
-              below should help!
+              Tente ir para página inicial.
             </Typography>
           </Box>
           <Container maxWidth="sm">
-            <Card sx={{ textAlign: 'center', mt: 3, p: 4 }}>
-              <FormControl variant="outlined" fullWidth>
-                <OutlinedInputWrapper
-                  type="text"
-                  placeholder="Search terms here..."
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <ButtonSearch variant="contained" size="small">
-                        Search
-                      </ButtonSearch>
-                    </InputAdornment>
-                  }
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <SearchTwoToneIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <Divider sx={{ my: 4 }}>OR</Divider>
-              <Button href="/overview" variant="outlined">
-                Go to homepage
+            <Card sx={{ textAlign: 'center', mt: 3, p: 4 }}>              
+              <Button href="/" variant="outlined">
+                Ir para Home
               </Button>
             </Card>
           </Container>

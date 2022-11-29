@@ -167,12 +167,21 @@ const Documents = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Título', flex: 2, minWidth: 300 },        
+        { 
+            field: 'title', 
+            headerName: 'Título', 
+            flex: 2, 
+            minWidth: 300,
+            hideable: false
+        },        
         { 
             field: 'id', 
             headerName: 'Ações',              
-            flex: 1,
-            minWidth: 200,
+            width: 250,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams) => (
                 <ButtonGroup>
                     <Button 

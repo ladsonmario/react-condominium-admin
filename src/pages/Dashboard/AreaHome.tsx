@@ -12,7 +12,8 @@ import {
   CardActionArea,
   styled,
   Switch,
-  CardMedia
+  CardMedia,
+  Divider
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { AreaType, ResultAreaType } from 'src/types/types';
@@ -101,7 +102,7 @@ function AreaHome() {
         }}
       >
         <Typography variant="h3">Áreas</Typography>
-        <Link to="/data/commonareas">
+        <Link to="/data/commonareas" style={{ textDecoration: 'none' }}>
           <Button
             size="small"
             variant="outlined"
@@ -122,22 +123,24 @@ function AreaHome() {
               <CardContent>
                 <Box>
                   <Typography variant="subtitle1" noWrap>
-                    Ativo
+                    {item.allowed === 1 ? 'Ativo' : 'Desativado'}
                   </Typography>
                   <Switch 
                     checked={item.allowed === 1}
                     color="success"                    
                   />
-                </Box> 
-                <Box>
+                </Box>
+                <Divider /> 
+                <Box sx={{ margin: '10px 0' }}>
                   <CardMedia component="img" src={item.cover} /> 
-                </Box>               
+                </Box> 
+                <Divider />              
                 <Box
                   sx={{
                     pt: 3
                   }}
                 >
-                  <Typography variant="h3" gutterBottom noWrap>
+                  <Typography variant="h4" gutterBottom noWrap>
                     {item.title}
                   </Typography>
                   <Typography variant="subtitle2" noWrap>

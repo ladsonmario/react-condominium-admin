@@ -153,13 +153,28 @@ const Wall = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Título', flex: 2, minWidth: 300 },
-        { field: 'datecreated', headerName: 'Data de criação', flex: 1, minWidth: 150 },
+        { 
+            field: 'title', 
+            headerName: 'Título', 
+            flex: 2, 
+            minWidth: 300,
+            hideable: false 
+        },
+        { 
+            field: 'datecreated', 
+            headerName: 'Data de criação', 
+            flex: 1, 
+            minWidth: 150,
+            hideable: false
+        },
         { 
             field: 'id', 
             headerName: 'Ações',              
-            flex: 1,
-            minWidth: 200,
+            width: 190,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams) => (
                 <ButtonGroup>
                     <Button 

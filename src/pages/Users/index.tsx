@@ -183,14 +183,34 @@ const Users = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Nome', flex: 1, minWidth: 300 },        
-        { field: 'email', headerName: 'E-mail', flex: 1, minWidth: 300 },        
-        { field: 'cpf', headerName: 'CPF', flex: 1, width: 130},        
+        { 
+            field: 'name', 
+            headerName: 'Nome', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
+        { 
+            field: 'email', 
+            headerName: 'E-mail', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
+        { 
+            field: 'cpf',
+            headerName: 'CPF',             
+            width: 130,
+            hideable: false
+        },        
         { 
             field: 'id', 
             headerName: 'Ações',              
-            flex: 1,
-            minWidth: 250,
+            width: 190,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams) => (
                 <ButtonGroup>                    
                     <Button 

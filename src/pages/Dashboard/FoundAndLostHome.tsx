@@ -85,12 +85,12 @@ function FoundAndLostHome() {
       }        
     }
 
-    setLost(itemsLost.length + 1);
-    setRecovered(itemsRecovered.length + 1);
+    setLost(itemsLost.length);
+    setRecovered(itemsRecovered.length);
   }, [list]);
 
   const percentFormat = (n: number) => {    
-    return `${((n * 100) / list.length).toFixed(2)}%`;
+    return `${(n * 100 / (list.length)).toFixed(2)}%`;
   }
 
   const theme = useTheme();
@@ -114,7 +114,7 @@ function FoundAndLostHome() {
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return parseInt(val.toString()) + '%';
+        return parseFloat(val.toString()).toFixed(2) + '%';
       },
       style: {
         colors: [theme.colors.alpha.trueWhite[100]]
@@ -179,7 +179,7 @@ function FoundAndLostHome() {
             </Typography>
             <Box>
               <Typography variant="h1" gutterBottom>
-                Total de {list.length + 1}
+                Total de {list.length}
               </Typography>
               <Typography
                 variant="h4"
@@ -213,7 +213,7 @@ function FoundAndLostHome() {
             </Box>
             <Grid container spacing={3}>              
               <Grid sm item>
-                <Link to="/management/foundandlost">
+                <Link to="/management/foundandlost" style={{ textDecoration: 'none' }}>
                   <Button fullWidth variant="contained">
                     Ir para Achados e Perdidos
                   </Button>
@@ -279,7 +279,7 @@ function FoundAndLostHome() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>                        
-                        <Text color="success">{percentFormat(recovered)}</Text>
+                        <Text color="success">{recovered === 0 ? '0%' : percentFormat(recovered)}</Text>
                       </Typography>                      
                     </Box>
                   </ListItem>
@@ -298,7 +298,7 @@ function FoundAndLostHome() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        <Text color="error">{percentFormat(lost)}</Text>
+                        <Text color="error">{lost === 0 ? '0%' : percentFormat(lost)}</Text>
                       </Typography>                      
                     </Box>
                   </ListItem>                  

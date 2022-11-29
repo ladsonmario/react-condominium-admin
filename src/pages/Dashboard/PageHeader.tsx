@@ -27,7 +27,7 @@ function PageHeader() {
           Bem-vindo(a), {user.name}!
         </Typography>
         <Typography variant="subtitle2">
-          Essas são as informações do condomínio.
+          Essas são algumas informações sobre o condomínio.
         </Typography>
       </Grid>
     </Grid>

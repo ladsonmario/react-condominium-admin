@@ -188,14 +188,35 @@ const Reservations = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'name_unit', headerName: 'Unidade', flex: 1, minWidth: 300 },        
-        { field: 'name_area', headerName: 'Área', flex: 1, minWidth: 300 },        
-        { field: 'reservation_date_formatted', headerName: 'Data da reserva', flex: 1, minWidth: 300 },        
+        { 
+            field: 'name_unit', 
+            headerName: 'Unidade', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
+        { 
+            field: 'name_area', 
+            headerName: 'Área', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false 
+        },        
+        { 
+            field: 'reservation_date_formatted', 
+            headerName: 'Data da reserva', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
         { 
             field: 'id', 
             headerName: 'Ações',              
-            flex: 1,
-            minWidth: 250,
+            width: 190,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams) => (
                 <ButtonGroup>                    
                     <Button 

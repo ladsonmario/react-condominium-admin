@@ -92,6 +92,10 @@ const FoundAndLost = () => {
             headerName: 'Recuperado', 
              
             width: 100,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams) => (
                 <>                
                     <Switch 
@@ -102,12 +106,28 @@ const FoundAndLost = () => {
                 </>
             )
         },        
-        { field: 'where', headerName: 'Local Encontrado', flex: 1, minWidth: 300 },        
-        { field: 'description', headerName: 'Descrição', flex: 1, minWidth: 300 },        
+        { 
+            field: 'where', 
+            headerName: 'Local Encontrado', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
+        { 
+            field: 'description', 
+            headerName: 'Descrição', 
+            flex: 1, 
+            minWidth: 300,
+            hideable: false
+        },        
         { 
             field: 'photo', 
             headerName: 'Foto', 
             width: 100,
+            sortable: false,
+            filterable: false,
+            hideable: false,
+            disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams)  => (
                 <>
                     {params.row.photo &&
